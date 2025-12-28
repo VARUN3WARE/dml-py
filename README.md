@@ -1,19 +1,26 @@
-# DML-PY - A Collaborative Deep Learning Library
+# pytorch-dml - A Collaborative Deep Learning Library
 
-[![PyPI version](https://badge.fury.io/py/dml-py.svg)](https://badge.fury.io/py/dml-py)
+[![PyPI version](https://badge.fury.io/py/pytorch-dml.svg)](https://badge.fury.io/py/pytorch-dml)
+[![PyPI](https://img.shields.io/pypi/v/pytorch-dml)](https://pypi.org/project/pytorch-dml/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](tests/)
 
-**DML-PY** is a production-ready library for collaborative neural network training, incorporating Deep Mutual Learning (DML) and related research advances.
+**pytorch-dml** is a production-ready library for collaborative neural network training, incorporating Deep Mutual Learning (DML) and related research advances.
 
-> 🎉 **Fully Validated!** - Production-ready with 22/22 tests passing and proven +18% accuracy improvement
+> 🎉 **Now on PyPI!** Install with `pip install pytorch-dml` - Production-ready with 13/13 tests passing
 
 ## 🚀 Quick Start
+
+### Installation
+
+```bash
+pip install pytorch-dml
+```
 
 ### 5-Line Example
 
 ```python
-from dml-py import DMLTrainer
+from pydml import DMLTrainer
 from torchvision import models
 
 models = [models.resnet18(), models.resnet18()]
@@ -73,8 +80,12 @@ print(f"Test Accuracy: {test_metrics['val_acc']:.2f}%")
 
 ### From Source (Recommended)
 
-```bash
+````bash
 git clone https://github.com/yourusername/dml-py
+### From Source
+
+```bash
+git clone https://github.com/VARUN3WARE/dml-py.git
 cd dml-py
 
 # Using uv (fast)
@@ -84,6 +95,12 @@ uv pip install -e .
 
 # Or using pip
 pip install -e .
+````
+
+### From PyPI
+
+```bash
+pip install pytorch-dml
 ```
 
 ### Requirements
