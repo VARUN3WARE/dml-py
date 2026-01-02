@@ -1,6 +1,7 @@
 """
 DML-PY - A Collaborative Deep Learning Library
 """
+
 from setuptools import setup, find_packages
 
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -20,7 +21,9 @@ setup(
         "Documentation": "https://github.com/VARUN3WARE/dml-py/blob/main/README.md",
         "Source Code": "https://github.com/VARUN3WARE/dml-py",
     },
-    packages=find_packages(exclude=["tests", "tests.*", "examples", "validation_tests"]),
+    packages=find_packages(
+        exclude=["tests", "tests.*", "examples", "validation_tests"]
+    ),
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",

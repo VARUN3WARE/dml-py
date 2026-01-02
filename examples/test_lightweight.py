@@ -14,7 +14,7 @@ print("DML-PY Lightweight Test (Memory-Efficient)")
 print("=" * 60)
 
 # Force CPU to avoid GPU memory issues
-device = 'cpu'
+device = "cpu"
 print(f"\n✓ Using device: {device}")
 
 # Test 1: Basic model creation
@@ -44,13 +44,13 @@ try:
     batch_size = 4  # Very small to save memory
     x = torch.randn(batch_size, 3, 32, 32)
     y = torch.randint(0, 10, (batch_size,))
-    
+
     for i, model in enumerate(trainer.models):
         model.eval()
         with torch.no_grad():
             output = model(x)
             assert output.shape == (batch_size, 10), f"Wrong shape: {output.shape}"
-    
+
     print(f"✓ Forward pass works (batch_size={batch_size})")
 except Exception as e:
     print(f"✗ Failed: {e}")
@@ -61,12 +61,12 @@ print("\n[Test 4] Testing loss computation...")
 try:
     outputs = [model(x) for model in trainer.models]
     losses = trainer.compute_collaborative_loss(outputs, y)
-    
+
     assert len(losses) == len(models), f"Expected {len(models)} losses"
     for i in range(len(models)):
-        assert f'model_{i}' in losses, f"Missing loss for model_{i}"
-        assert not torch.isnan(losses[f'model_{i}']), "Loss is NaN"
-    
+        assert f"model_{i}" in losses, f"Missing loss for model_{i}"
+        assert not torch.isnan(losses[f"model_{i}"]), "Loss is NaN"
+
     print(f"✓ Loss computation works")
     print(f"  - Model 0 loss: {losses['model_0'].item():.4f}")
     print(f"  - Model 1 loss: {losses['model_1'].item():.4f}")
@@ -78,26 +78,28 @@ except Exception as e:
 print("\n[Test 5] Testing single training step...")
 try:
     # Create tiny dataset
-    train_data = [(torch.randn(3, 32, 32), torch.randint(0, 10, (1,)).item()) for _ in range(8)]
+    train_data = [
+        (torch.randn(3, 32, 32), torch.randint(0, 10, (1,)).item()) for _ in range(8)
+    ]
     from torch.utils.data import DataLoader, TensorDataset
-    
+
     X = torch.stack([x for x, _ in train_data])
     Y = torch.tensor([y for _, y in train_data])
     dataset = TensorDataset(X, Y)
     train_loader = DataLoader(dataset, batch_size=4, shuffle=False)
-    
+
     # Train for just 1 epoch
     trainer.train()
     for inputs, targets in train_loader:
         outputs = [model(inputs) for model in trainer.models]
         losses = trainer.compute_collaborative_loss(outputs, targets)
-        
+
         # Backward pass for first model only (to save memory)
         trainer.optimizers[0].zero_grad()
-        losses['model_0'].backward()
+        losses["model_0"].backward()
         trainer.optimizers[0].step()
         break  # Only one batch
-    
+
     print(f"✓ Training step works")
 except Exception as e:
     print(f"✗ Failed: {e}")
@@ -109,14 +111,14 @@ try:
     trainer.eval()
     correct = 0
     total = 0
-    
+
     with torch.no_grad():
         for inputs, targets in train_loader:
             outputs = trainer.models[0](inputs)
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
-    
+
     acc = 100.0 * correct / total
     print(f"✓ Evaluation works (accuracy: {acc:.2f}%)")
 except Exception as e:
@@ -128,12 +130,12 @@ print("\n[Test 7] Testing checkpoint save/load...")
 try:
     import tempfile
     import os
-    
+
     with tempfile.TemporaryDirectory() as tmpdir:
-        checkpoint_path = os.path.join(tmpdir, 'test_checkpoint.pt')
+        checkpoint_path = os.path.join(tmpdir, "test_checkpoint.pt")
         trainer.save_checkpoint(checkpoint_path)
         assert os.path.exists(checkpoint_path), "Checkpoint file not created"
-        
+
         # Load it back
         trainer.load_checkpoint(checkpoint_path)
         print(f"✓ Checkpoint save/load works")

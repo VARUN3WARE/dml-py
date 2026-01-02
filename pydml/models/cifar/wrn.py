@@ -11,23 +11,34 @@ import torch.nn.functional as F
 
 class BasicBlock(nn.Module):
     """Wide basic block for WRN."""
-    
+
     def __init__(self, in_planes, out_planes, stride, dropRate=0.0):
         super(BasicBlock, self).__init__()
         self.bn1 = nn.BatchNorm2d(in_planes)
         self.relu1 = nn.ReLU(inplace=True)
-        self.conv1 = nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride,
-                               padding=1, bias=False)
+        self.conv1 = nn.Conv2d(
+            in_planes, out_planes, kernel_size=3, stride=stride, padding=1, bias=False
+        )
         self.bn2 = nn.BatchNorm2d(out_planes)
         self.relu2 = nn.ReLU(inplace=True)
-        self.conv2 = nn.Conv2d(out_planes, out_planes, kernel_size=3, stride=1,
-                               padding=1, bias=False)
+        self.conv2 = nn.Conv2d(
+            out_planes, out_planes, kernel_size=3, stride=1, padding=1, bias=False
+        )
         self.droprate = dropRate
-        self.equalInOut = (in_planes == out_planes)
-        self.convShortcut = (not self.equalInOut) and nn.Conv2d(in_planes, out_planes,
-                                                                  kernel_size=1, stride=stride,
-                                                                  padding=0, bias=False) or None
-    
+        self.equalInOut = in_planes == out_planes
+        self.convShortcut = (
+            (not self.equalInOut)
+            and nn.Conv2d(
+                in_planes,
+                out_planes,
+                kernel_size=1,
+                stride=stride,
+                padding=0,
+                bias=False,
+            )
+            or None
+        )
+
     def forward(self, x):
         if not self.equalInOut:
             x = self.relu1(self.bn1(x))
@@ -42,18 +53,26 @@ class BasicBlock(nn.Module):
 
 class NetworkBlock(nn.Module):
     """Network block consisting of multiple basic blocks."""
-    
+
     def __init__(self, nb_layers, in_planes, out_planes, block, stride, dropRate=0.0):
         super(NetworkBlock, self).__init__()
-        self.layer = self._make_layer(block, in_planes, out_planes, nb_layers, stride, dropRate)
-    
+        self.layer = self._make_layer(
+            block, in_planes, out_planes, nb_layers, stride, dropRate
+        )
+
     def _make_layer(self, block, in_planes, out_planes, nb_layers, stride, dropRate):
         layers = []
         for i in range(int(nb_layers)):
-            layers.append(block(i == 0 and in_planes or out_planes, out_planes,
-                                i == 0 and stride or 1, dropRate))
+            layers.append(
+                block(
+                    i == 0 and in_planes or out_planes,
+                    out_planes,
+                    i == 0 and stride or 1,
+                    dropRate,
+                )
+            )
         return nn.Sequential(*layers)
-    
+
     def forward(self, x):
         return self.layer(x)
 
@@ -61,24 +80,25 @@ class NetworkBlock(nn.Module):
 class WideResNet(nn.Module):
     """
     Wide Residual Network for CIFAR datasets.
-    
+
     Args:
         depth: Network depth (e.g., 28)
         widen_factor: Width multiplier (e.g., 10 for WRN-28-10)
         num_classes: Number of output classes
         dropRate: Dropout rate (default: 0.0)
     """
-    
+
     def __init__(self, depth=28, widen_factor=10, num_classes=10, dropRate=0.0):
         super(WideResNet, self).__init__()
         nChannels = [16, 16 * widen_factor, 32 * widen_factor, 64 * widen_factor]
-        assert ((depth - 4) % 6 == 0)
+        assert (depth - 4) % 6 == 0
         n = (depth - 4) / 6
         block = BasicBlock
-        
+
         # 1st conv before any network block
-        self.conv1 = nn.Conv2d(3, nChannels[0], kernel_size=3, stride=1,
-                               padding=1, bias=False)
+        self.conv1 = nn.Conv2d(
+            3, nChannels[0], kernel_size=3, stride=1, padding=1, bias=False
+        )
         # 1st block
         self.block1 = NetworkBlock(n, nChannels[0], nChannels[1], block, 1, dropRate)
         # 2nd block
@@ -90,16 +110,16 @@ class WideResNet(nn.Module):
         self.relu = nn.ReLU(inplace=True)
         self.fc = nn.Linear(nChannels[3], num_classes)
         self.nChannels = nChannels[3]
-        
+
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
-                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+                nn.init.kaiming_normal_(m.weight, mode="fan_out", nonlinearity="relu")
             elif isinstance(m, nn.BatchNorm2d):
                 m.weight.data.fill_(1)
                 m.bias.data.zero_()
             elif isinstance(m, nn.Linear):
                 m.bias.data.zero_()
-    
+
     def forward(self, x):
         out = self.conv1(x)
         out = self.block1(out)
@@ -114,14 +134,16 @@ class WideResNet(nn.Module):
 def wrn_28_10(num_classes=10, dropRate=0.0):
     """
     Wide ResNet 28-10 for CIFAR.
-    
+
     28 layers with width multiplier of 10.
-    
+
     Args:
         num_classes: Number of output classes (10 for CIFAR-10, 100 for CIFAR-100)
         dropRate: Dropout rate (default: 0.0)
-    
+
     Returns:
         WRN-28-10 model
     """
-    return WideResNet(depth=28, widen_factor=10, num_classes=num_classes, dropRate=dropRate)
+    return WideResNet(
+        depth=28, widen_factor=10, num_classes=num_classes, dropRate=dropRate
+    )
