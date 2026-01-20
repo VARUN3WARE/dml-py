@@ -297,7 +297,7 @@ class BaseCollaborativeTrainer(ABC):
     
     def load_checkpoint(self, path: str):
         """Load checkpoint of all models and optimizers."""
-        checkpoint = torch.load(path, map_location=self.device)
+        checkpoint = torch.load(path, map_location=self.device, weights_only=False)
         self.current_epoch = checkpoint['epoch']
         self.global_step = checkpoint['global_step']
         self.history = checkpoint['history']

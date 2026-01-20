@@ -73,6 +73,45 @@ class DMLTrainer(BaseCollaborativeTrainer):
         schedulers: Optional[List] = None,
         callbacks: Optional[List] = None,
     ):
+        # Input validation
+        if not isinstance(models, (list, tuple)):
+            raise TypeError("models must be a list or tuple of PyTorch models")
+        
+        if len(models) < 2:
+            raise ValueError(f"DML requires at least 2 models, got {len(models)}")
+        
+        if not all(isinstance(m, nn.Module) for m in models):
+            raise TypeError("All models must be instances of torch.nn.Module")
+        
+        # Validate output dimensions match (try common input shapes)
+        validation_successful = False
+        for input_shape in [(2, 3, 32, 32), (2, 1, 28, 28), (2, 784)]:
+            try:
+                with torch.no_grad():
+                    dummy_input = torch.randn(*input_shape).to(device)
+                    output_dims = [model(dummy_input.to(next(model.parameters()).device)).shape[-1] for model in models]
+                
+                if len(set(output_dims)) > 1:
+                    raise ValueError(
+                        f"All models must have the same output dimension. "
+                        f"Got dimensions: {output_dims}"
+                    )
+                validation_successful = True
+                break
+            except (RuntimeError, StopIteration, ValueError) as e:
+                if "same output dimension" in str(e):
+                    raise  # Re-raise dimension mismatch errors
+                continue  # Try next input shape
+        
+        # Only warn if all shapes failed
+        if not validation_successful:
+            import warnings
+            warnings.warn(
+                "Could not validate output dimensions with common input shapes. "
+                "Ensure all models have the same output dimension.",
+                UserWarning
+            )
+        
         super().__init__(
             models=models,
             device=device,
