@@ -245,7 +245,7 @@ Expected results (200 epochs):
 
 Contributions are welcome! This project is actively maintained.
 
-`Note: The project is still in early period and I am still learning and exploring.`
+`Note: The project is still in early period and I am still learning and exploring.So, might not reply and go AFK for long so wait to contribute till march..`
 
 ### Future Enhancements
 
