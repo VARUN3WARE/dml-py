@@ -24,7 +24,6 @@ def _is_jupyter():
             return False  # Other type
     except NameError:
         return False  # Not in IPython/Jupyter
-
 # Use appropriate tqdm based on environment
 if _is_jupyter():
     from tqdm.notebook import tqdm
