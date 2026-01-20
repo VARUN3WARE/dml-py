@@ -9,8 +9,27 @@ from typing import List, Optional, Dict, Any, Callable
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
-from tqdm import tqdm
 import time
+
+# Detect Jupyter environment and import appropriate tqdm
+def _is_jupyter():
+    """Detect if running in a Jupyter notebook."""
+    try:
+        shell = get_ipython().__class__.__name__
+        if shell == 'ZMQInteractiveShell':
+            return True  # Jupyter notebook or qtconsole
+        elif shell == 'TerminalInteractiveShell':
+            return False  # Terminal running IPython
+        else:
+            return False  # Other type
+    except NameError:
+        return False  # Not in IPython/Jupyter
+
+# Use appropriate tqdm based on environment
+if _is_jupyter():
+    from tqdm.notebook import tqdm
+else:
+    from tqdm import tqdm
 
 
 class BaseCollaborativeTrainer(ABC):
@@ -114,6 +133,7 @@ class BaseCollaborativeTrainer(ABC):
         correct = [0] * self.num_models
         total = 0
         
+        # Use environment-aware tqdm (auto-detects Jupyter)
         pbar = tqdm(train_loader, desc=f"Epoch {epoch}")
         
         for batch_idx, (inputs, targets) in enumerate(pbar):
@@ -184,6 +204,7 @@ class BaseCollaborativeTrainer(ABC):
         correct = [0] * self.num_models
         total = 0
         
+        # Use environment-aware tqdm (auto-detects Jupyter)
         for inputs, targets in tqdm(val_loader, desc="Evaluating"):
             inputs, targets = inputs.to(self.device), targets.to(self.device)
             
