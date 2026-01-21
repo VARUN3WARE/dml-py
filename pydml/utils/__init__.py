@@ -25,6 +25,17 @@ from .schedulers import (
     get_scheduler_info,
     validate_schedulers,
 )
+from .ensemble import (
+    ensemble_predict,
+    average_predictions,
+    voting_predictions,
+    weighted_predictions,
+    max_confidence_predictions,
+    ensemble_accuracy,
+    calibrate_ensemble_weights,
+    get_prediction_diversity,
+    EnsembleModel,
+)
 
 __all__ = [
     'get_cifar10_loaders',
@@ -58,4 +69,13 @@ __all__ = [
     'create_reduce_on_plateau_schedulers',
     'get_scheduler_info',
     'validate_schedulers',
+    'ensemble_predict',
+    'average_predictions',
+    'voting_predictions',
+    'weighted_predictions',
+    'max_confidence_predictions',
+    'ensemble_accuracy',
+    'calibrate_ensemble_weights',
+    'get_prediction_diversity',
+    'EnsembleModel',
 ]
