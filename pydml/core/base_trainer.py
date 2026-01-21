@@ -75,6 +75,8 @@ class BaseCollaborativeTrainer(ABC):
         
         # Setup schedulers
         self.schedulers = schedulers or []
+        if self.schedulers:
+            self._validate_schedulers()
         
         # Setup callbacks
         self.callbacks = callbacks or []
@@ -303,20 +305,47 @@ class BaseCollaborativeTrainer(ABC):
         
         return self.history
     
+    def _validate_schedulers(self):
+        """Validate that schedulers are properly configured."""
+        if len(self.schedulers) != self.num_models:
+            raise ValueError(
+                f"Number of schedulers ({len(self.schedulers)}) must match "
+                f"number of models/optimizers ({self.num_models})"
+            )
+        
+        # Check each scheduler is associated with correct optimizer
+        for i, scheduler in enumerate(self.schedulers):
+            if hasattr(scheduler, 'optimizer'):
+                if scheduler.optimizer is not self.optimizers[i]:
+                    raise ValueError(
+                        f"Scheduler {i} is not associated with optimizer {i}. "
+                        f"Make sure schedulers are created with the correct optimizers."
+                    )
+    
+    def get_learning_rates(self) -> List[float]:
+        """
+        Get current learning rates for all optimizers.
+        
+        Returns:
+            List of current learning rates
+        """
+        return [group['lr'] for opt in self.optimizers for group in opt.param_groups]
+    
     def save_checkpoint(self, path: str):
-        """Save checkpoint of all models and optimizers."""
+        """Save checkpoint of all models, optimizers, and schedulers."""
         checkpoint = {
             'epoch': self.current_epoch,
             'global_step': self.global_step,
             'history': self.history,
             'models': [model.state_dict() for model in self.models],
             'optimizers': [opt.state_dict() for opt in self.optimizers],
+            'schedulers': [sched.state_dict() for sched in self.schedulers] if self.schedulers else [],
         }
         torch.save(checkpoint, path)
         print(f"Checkpoint saved to {path}")
     
     def load_checkpoint(self, path: str):
-        """Load checkpoint of all models and optimizers."""
+        """Load checkpoint of all models, optimizers, and schedulers."""
         checkpoint = torch.load(path, map_location=self.device, weights_only=False)
         self.current_epoch = checkpoint['epoch']
         self.global_step = checkpoint['global_step']
@@ -327,5 +356,10 @@ class BaseCollaborativeTrainer(ABC):
         
         for opt, state_dict in zip(self.optimizers, checkpoint['optimizers']):
             opt.load_state_dict(state_dict)
+        
+        # Load schedulers if they exist
+        if 'schedulers' in checkpoint and self.schedulers:
+            for sched, state_dict in zip(self.schedulers, checkpoint['schedulers']):
+                sched.load_state_dict(state_dict)
         
         print(f"Checkpoint loaded from {path} (epoch {self.current_epoch})")
