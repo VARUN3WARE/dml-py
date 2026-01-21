@@ -85,7 +85,8 @@ class DMLTrainer(BaseCollaborativeTrainer):
         
         # Validate output dimensions match (try common input shapes)
         validation_successful = False
-        for input_shape in [(2, 3, 32, 32), (2, 1, 28, 28), (2, 784)]:
+        # Try various common input shapes: CIFAR, MNIST, flattened, and simple 1D
+        for input_shape in [(2, 3, 32, 32), (2, 1, 28, 28), (2, 784), (2, 10)]:
             try:
                 with torch.no_grad():
                     dummy_input = torch.randn(*input_shape).to(device)
