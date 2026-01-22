@@ -109,11 +109,6 @@ def main():
     print("  ✓ Learning from each other via mimicry loss")
     print("  ✓ Memory usage kept minimal")
     print(f"  ✓ Training completed in {num_epochs} epochs")
-    
-    print("\nNext Steps:")
-    print("  1. Try with real data: python examples/quick_start.py")
-    print("  2. Run full benchmark: python examples/cifar100_benchmark.py")
-    print("  3. Analyze robustness: see examples/advanced_training.py")
 
 if __name__ == '__main__':
     main()

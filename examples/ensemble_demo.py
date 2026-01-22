@@ -248,25 +248,6 @@ def demonstrate_ensemble_methods():
         print(f"\n{method}:")
         for key, value in props.items():
             print(f"  {key:12s}: {value}")
-    
-    print()
-    print("=" * 80)
-    print("DEMONSTRATION COMPLETE")
-    print("=" * 80)
-    print()
-    print("Key Takeaways:")
-    print("  ✓ Average predictions works best in most cases")
-    print("  ✓ Use weighted ensemble when models have different accuracies")
-    print("  ✓ Calibrate weights automatically with validation data")
-    print("  ✓ Higher diversity → better ensemble performance")
-    print("  ✓ EnsembleModel provides convenient nn.Module interface")
-    print()
-    print("Usage Pattern:")
-    print("  1. Train models with DML: trainer.fit(train_loader, val_loader)")
-    print("  2. Get trained models: models = trainer.models")
-    print("  3. Create ensemble: ensemble = EnsembleModel(models, method='average')")
-    print("  4. Make predictions: predictions = ensemble(inputs)")
-    print()
 
 
 if __name__ == '__main__':

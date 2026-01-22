@@ -378,7 +378,6 @@ class TemperatureAnalyzer:
         try:
             import matplotlib.pyplot as plt
         except ImportError:
-            print("matplotlib required for visualization")
             return
         
         fig, ax = plt.subplots(figsize=(12, 6))
@@ -403,7 +402,6 @@ class TemperatureAnalyzer:
         
         if save_path:
             plt.savefig(save_path, dpi=300, bbox_inches='tight')
-            print(f"✓ Saved temperature schedule visualization to {save_path}")
         else:
             plt.show()
         

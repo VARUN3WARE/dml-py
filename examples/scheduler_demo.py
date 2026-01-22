@@ -235,25 +235,6 @@ def demonstrate_schedulers():
     print("Learning Rate Schedule:")
     for epoch, lr in enumerate(lr_history, 1):
         print(f"  Epoch {epoch}: {lr:.6f}")
-    
-    print()
-    print("=" * 80)
-    print("DEMONSTRATION COMPLETE")
-    print("=" * 80)
-    print()
-    print("Key Takeaways:")
-    print("  ✓ StepLR: Simple, reduces LR at fixed intervals")
-    print("  ✓ CosineAnnealingLR: Smooth reduction, good for convergence")
-    print("  ✓ MultiStepLR: Precise control at specific epochs")
-    print("  ✓ ExponentialLR: Gradual exponential decay")
-    print("  ✓ WarmRestarts: Periodic restarts to escape local minima")
-    print()
-    print("Usage Pattern:")
-    print("  1. Create optimizers: optimizers = [Adam(m.parameters()) for m in models]")
-    print("  2. Create schedulers: schedulers = create_cosine_schedulers(optimizers, T_max=200)")
-    print("  3. Pass to trainer: trainer = DMLTrainer(models, optimizers=optimizers, schedulers=schedulers)")
-    print("  4. Schedulers step automatically during training!")
-    print()
 
 
 if __name__ == '__main__':

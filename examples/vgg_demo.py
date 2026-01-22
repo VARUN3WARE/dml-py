@@ -139,23 +139,6 @@ def demonstrate_vgg_models():
         param_size = sum(p.numel() * p.element_size() for p in model.parameters())
         param_size_mb = param_size / (1024 ** 2)
         print(f"{name:8} - Model size: {param_size_mb:.2f} MB")
-    
-    print()
-    print("=" * 80)
-    print("DEMONSTRATION COMPLETE")
-    print("=" * 80)
-    print()
-    print("Key Features:")
-    print("  ✓ VGG11, VGG13, VGG16, VGG19 available")
-    print("  ✓ Adapted for CIFAR-10/100 (32x32 images)")
-    print("  ✓ Supports both CIFAR-10 and CIFAR-100")
-    print("  ✓ Optional batch normalization")
-    print("  ✓ Compatible with DML training")
-    print()
-    print("Next Steps:")
-    print("  1. Import: from pydml.models.cifar import vgg16")
-    print("  2. Create: model = vgg16(num_classes=10)")
-    print("  3. Train with DML or standard training")
 
 
 if __name__ == '__main__':

@@ -407,7 +407,6 @@ class PeerSelectionAnalyzer:
             import matplotlib.pyplot as plt
             import networkx as nx
         except ImportError:
-            print("matplotlib and networkx required for visualization")
             return
         
         # Create directed graph

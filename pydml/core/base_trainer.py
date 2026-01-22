@@ -260,9 +260,6 @@ class BaseCollaborativeTrainer(ABC):
         Returns:
             Training history dictionary
         """
-        print(f"Starting training on {self.device}")
-        print(f"Training {self.num_models} models collaboratively for {epochs} epochs")
-        
         for epoch in range(1, epochs + 1):
             self.current_epoch = epoch
             start_time = time.time()
@@ -342,7 +339,6 @@ class BaseCollaborativeTrainer(ABC):
             'schedulers': [sched.state_dict() for sched in self.schedulers] if self.schedulers else [],
         }
         torch.save(checkpoint, path)
-        print(f"Checkpoint saved to {path}")
     
     def load_checkpoint(self, path: str):
         """Load checkpoint of all models, optimizers, and schedulers."""
@@ -361,5 +357,3 @@ class BaseCollaborativeTrainer(ABC):
         if 'schedulers' in checkpoint and self.schedulers:
             for sched, state_dict in zip(self.schedulers, checkpoint['schedulers']):
                 sched.load_state_dict(state_dict)
-        
-        print(f"Checkpoint loaded from {path} (epoch {self.current_epoch})")

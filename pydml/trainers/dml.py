@@ -130,11 +130,6 @@ class DMLTrainer(BaseCollaborativeTrainer):
         # Initialize loss functions
         self.ce_loss = CrossEntropyLoss()
         self.kl_loss = KLDivergenceLoss(temperature=self.config.temperature)
-        
-        print(f"DML Trainer initialized with {self.num_models} models")
-        print(f"Config: temperature={self.config.temperature}, "
-              f"supervised_weight={self.config.supervised_weight}, "
-              f"mimicry_weight={self.config.mimicry_weight}")
     
     def compute_collaborative_loss(
         self,

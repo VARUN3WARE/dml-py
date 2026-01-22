@@ -194,18 +194,6 @@ def main():
     time_ratio = dml_time / baseline_time
     print(f"  ✓ Training time overhead: {(time_ratio - 1)*100:.1f}%")
     print(f"  ✓ You get {len(dml_trainer.models)} trained models instead of 1")
-    
-    print("\nNext Steps:")
-    print("  1. Run with more epochs (200) for better results")
-    print("  2. Try different architectures (MobileNet, WRN)")
-    print("  3. Experiment with 3+ models")
-    print("  4. Analyze robustness with pydml.analysis.robustness")
-    print("  5. Run full benchmark: python examples/cifar100_benchmark.py")
-    
-    print_section("Demo Complete!")
-    print("\n✅ Successfully demonstrated DML-PY workflow")
-    print("📊 Results show collaborative learning benefits")
-    print("🚀 Ready for production use!")
 
 
 if __name__ == '__main__':
