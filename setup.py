@@ -8,7 +8,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="pytorch-dml",
-    version="1.0.0",
+    version="1.1.0",
     author="Varun Rao",
     author_email="varunrao.gd@gmail.com",
     description="A production-ready library for Deep Mutual Learning and collaborative neural network training",
