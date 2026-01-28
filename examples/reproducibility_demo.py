@@ -145,69 +145,12 @@ def example_reproducible_context():
     print()
 
 
-def example_best_practices():
-    """Best practices for reproducibility."""
-    print("=" * 70)
-    print("Example 5: Best Practices")
-    print("=" * 70)
-    
-    print("""
-Best Practices for Reproducible Results:
-
-1. Set seed at the start of your script:
-   ```python
-   from pydml import set_seed
-   set_seed(42)
-   ```
-
-2. Use seed parameter in trainers:
-   ```python
-   trainer = DMLTrainer(models=models, seed=42)
-   ```
-
-3. Set num_workers=0 for DataLoader on Windows:
-   ```python
-   loader = DataLoader(dataset, num_workers=0)  # Reproducible
-   ```
-
-4. Disable CUDA benchmark for full reproducibility:
-   ```python
-   set_seed(42, deterministic=True)  # Slower but reproducible
-   ```
-
-5. Document your seed in papers/reports:
-   - "All experiments use random seed 42 for reproducibility"
-
-6. For multiple experiments with different seeds:
-   ```python
-   results = []
-   for seed in [42, 123, 456]:
-       set_seed(seed)
-       result = train_model()
-       results.append(result)
-   
-   mean_acc = np.mean([r['accuracy'] for r in results])
-   std_acc = np.std([r['accuracy'] for r in results])
-   print(f"Accuracy: {mean_acc:.2f} ± {std_acc:.2f}%")
-   ```
-
-7. Save seed with checkpoints:
-   ```python
-   checkpoint = {
-       'seed': 42,
-       'model': model.state_dict(),
-       # ... other data
-   }
-   ```
-    """)
-
 
 if __name__ == '__main__':
     # Run all examples
     example_basic_reproducibility()
     example_compare_with_without_seed()
     example_reproducible_context()
-    example_best_practices()
     
     # Uncomment to run training example (takes a few minutes)
     # example_reproducible_training()

@@ -62,6 +62,7 @@ class DMLTrainer(BaseCollaborativeTrainer):
         optimizers: Optional list of optimizers (one per model)
         schedulers: Optional list of learning rate schedulers
         callbacks: Optional list of callbacks for training hooks
+        seed: Random seed for reproducibility. If None, no seed is set.
     """
     
     def __init__(
@@ -72,6 +73,7 @@ class DMLTrainer(BaseCollaborativeTrainer):
         optimizers: Optional[List[torch.optim.Optimizer]] = None,
         schedulers: Optional[List] = None,
         callbacks: Optional[List] = None,
+        seed: Optional[int] = None,
     ):
         # Input validation
         if not isinstance(models, (list, tuple)):
@@ -119,6 +121,7 @@ class DMLTrainer(BaseCollaborativeTrainer):
             optimizers=optimizers,
             schedulers=schedulers,
             callbacks=callbacks,
+            seed=seed,
         )
         
         # Handle dict or DMLConfig object
