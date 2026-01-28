@@ -63,6 +63,8 @@ class DMLTrainer(BaseCollaborativeTrainer):
         schedulers: Optional list of learning rate schedulers
         callbacks: Optional list of callbacks for training hooks
         seed: Random seed for reproducibility. If None, no seed is set.
+        use_amp: Enable automatic mixed precision training. If None, auto-detects based on GPU capability.
+        amp_dtype: Data type for AMP (torch.float16 or torch.bfloat16)
     """
     
     def __init__(
@@ -74,6 +76,8 @@ class DMLTrainer(BaseCollaborativeTrainer):
         schedulers: Optional[List] = None,
         callbacks: Optional[List] = None,
         seed: Optional[int] = None,
+        use_amp: Optional[bool] = None,
+        amp_dtype: torch.dtype = torch.float16,
     ):
         # Input validation
         if not isinstance(models, (list, tuple)):
@@ -122,6 +126,8 @@ class DMLTrainer(BaseCollaborativeTrainer):
             schedulers=schedulers,
             callbacks=callbacks,
             seed=seed,
+            use_amp=use_amp,
+            amp_dtype=amp_dtype,
         )
         
         # Handle dict or DMLConfig object
