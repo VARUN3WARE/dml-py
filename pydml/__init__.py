@@ -18,6 +18,7 @@ from pydml.utils.cuda_memory import (
     AutoBatchSizeReducer,
     MemoryMonitor
 )
+from pydml.utils.amp import AMPConfig, AMPManager
 
 __all__ = [
     "DMLTrainer",
@@ -29,4 +30,6 @@ __all__ = [
     "get_gpu_memory_info",
     "AutoBatchSizeReducer",
     "MemoryMonitor",
+    "AMPConfig",
+    "AMPManager",
 ]

@@ -18,6 +18,7 @@ from pydml.utils.cuda_memory import (
     CUDAOutOfMemoryError,
     MemoryMonitor
 )
+from pydml.utils.amp import AMPConfig, AMPManager
 
 # Detect Jupyter environment and import appropriate tqdm
 def _is_jupyter():
@@ -53,6 +54,8 @@ class BaseCollaborativeTrainer(ABC):
         schedulers: Optional list of learning rate schedulers
         callbacks: Optional list of callbacks for training hooks
         seed: Random seed for reproducibility. If None, no seed is set.
+        use_amp: Enable automatic mixed precision training. If None, auto-detects based on GPU capability.
+        amp_dtype: Data type for AMP (torch.float16 or torch.bfloat16)
     """
     
     def __init__(
@@ -63,6 +66,8 @@ class BaseCollaborativeTrainer(ABC):
         schedulers: Optional[List[Any]] = None,
         callbacks: Optional[List[Any]] = None,
         seed: Optional[int] = None,
+        use_amp: Optional[bool] = None,
+        amp_dtype: torch.dtype = torch.float16,
     ):
         # Set random seed for reproducibility if provided
         if seed is not None:
@@ -97,6 +102,11 @@ class BaseCollaborativeTrainer(ABC):
         
         # Setup callbacks
         self.callbacks = callbacks or []
+        
+        # Setup AMP (Automatic Mixed Precision)
+        amp_config = AMPConfig(enabled=use_amp, dtype=amp_dtype)
+        self.amp_manager = AMPManager(amp_config, device=str(self.device))
+        self.use_amp = amp_config.enabled
         
         # Training state
         self.current_epoch = 0
@@ -158,23 +168,35 @@ class BaseCollaborativeTrainer(ABC):
             inputs, targets = inputs.to(self.device), targets.to(self.device)
             
             try:
-                # Forward pass for all models
+                # Forward pass for all models with AMP
                 outputs = []
-                for model in self.models:
-                    output = model(inputs)
-                    outputs.append(output)
+                with self.amp_manager.autocast():
+                    for model in self.models:
+                        output = model(inputs)
+                        outputs.append(output)
+                    
+                    # Compute collaborative loss
+                    losses = self.compute_collaborative_loss(outputs, targets)
                 
-                # Compute collaborative loss
-                losses = self.compute_collaborative_loss(outputs, targets)
-                
-                # Backward pass and optimization for each model
+                # Backward pass and optimization for each model with AMP
                 for i, (optimizer, model) in enumerate(zip(self.optimizers, self.models)):
                     optimizer.zero_grad()
                     loss = losses[f'model_{i}']
-                    loss.backward(retain_graph=(i < self.num_models - 1))
-                    optimizer.step()
+                    
+                    # Scale loss if using AMP
+                    if self.use_amp:
+                        scaled_loss = self.amp_manager.scale_loss(loss)
+                        scaled_loss.backward(retain_graph=(i < self.num_models - 1))
+                        self.amp_manager.step(optimizer)
+                    else:
+                        loss.backward(retain_graph=(i < self.num_models - 1))
+                        optimizer.step()
                     
                     total_losses[i] += loss.item()
+                
+                # Update gradient scaler if using AMP
+                if self.use_amp:
+                    self.amp_manager.update()
                 
                 # Compute accuracy
                 for i, output in enumerate(outputs):
@@ -367,7 +389,7 @@ class BaseCollaborativeTrainer(ABC):
         return [group['lr'] for opt in self.optimizers for group in opt.param_groups]
     
     def save_checkpoint(self, path: str):
-        """Save checkpoint of all models, optimizers, and schedulers."""
+        """Save checkpoint of all models, optimizers, schedulers, and AMP state."""
         checkpoint = {
             'epoch': self.current_epoch,
             'global_step': self.global_step,
@@ -375,11 +397,12 @@ class BaseCollaborativeTrainer(ABC):
             'models': [model.state_dict() for model in self.models],
             'optimizers': [opt.state_dict() for opt in self.optimizers],
             'schedulers': [sched.state_dict() for sched in self.schedulers] if self.schedulers else [],
+            'amp': self.amp_manager.state_dict() if self.use_amp else {},
         }
         torch.save(checkpoint, path)
     
     def load_checkpoint(self, path: str):
-        """Load checkpoint of all models, optimizers, and schedulers."""
+        """Load checkpoint of all models, optimizers, schedulers, and AMP state."""
         checkpoint = torch.load(path, map_location=self.device, weights_only=False)
         self.current_epoch = checkpoint['epoch']
         self.global_step = checkpoint['global_step']
@@ -395,3 +418,7 @@ class BaseCollaborativeTrainer(ABC):
         if 'schedulers' in checkpoint and self.schedulers:
             for sched, state_dict in zip(self.schedulers, checkpoint['schedulers']):
                 sched.load_state_dict(state_dict)
+        
+        # Load AMP state if it exists
+        if 'amp' in checkpoint and self.use_amp:
+            self.amp_manager.load_state_dict(checkpoint['amp'])
