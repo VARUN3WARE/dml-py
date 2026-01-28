@@ -4,6 +4,16 @@ from .data import get_cifar10_loaders, get_cifar100_loaders
 from .metrics import accuracy
 from .logging import ExperimentLogger, ConsoleLogger
 from .reproducibility import set_seed, get_random_state, set_random_state, ReproducibleContext
+from .cuda_memory import (
+    get_gpu_memory_info,
+    clear_cuda_cache,
+    print_memory_summary,
+    handle_oom,
+    safe_forward,
+    AutoBatchSizeReducer,
+    MemoryMonitor,
+    CUDAOutOfMemoryError
+)
 from .amp import AMPConfig, AMPManager, apply_amp_to_trainer
 from .distributed import DistributedConfig, DistributedManager, launch_distributed, apply_distributed_to_trainer
 from .export import ExportConfig, ModelExporter, export_ensemble, quick_export
@@ -48,6 +58,14 @@ __all__ = [
     'get_random_state',
     'set_random_state',
     'ReproducibleContext',
+    'get_gpu_memory_info',
+    'clear_cuda_cache',
+    'print_memory_summary',
+    'handle_oom',
+    'safe_forward',
+    'AutoBatchSizeReducer',
+    'MemoryMonitor',
+    'CUDAOutOfMemoryError',
     'AMPConfig',
     'AMPManager',
     'apply_amp_to_trainer',

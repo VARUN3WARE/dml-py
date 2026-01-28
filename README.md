@@ -71,7 +71,8 @@ print(f"Test Accuracy: {test_metrics['val_acc']:.2f}%")
 ## ✨ Features
 
 - 🤝 **Deep Mutual Learning**: Train multiple networks collaboratively
-- � **Reproducibility**: Built-in seed management for consistent results
+- 🎲 **Reproducibility**: Built-in seed management for consistent results
+- 🛡️ **CUDA OOM Handling**: Automatic out-of-memory error recovery and monitoring
 - 📊 **Multiple Architectures**: ResNet, MobileNet, WideResNet for CIFAR
 - 🧩 **Modular Design**: Easy to extend and customize
 - 🔬 **Research-Ready**: Built for experimentation
@@ -164,6 +165,36 @@ trainer = DMLTrainer(models, device='cuda', seed=42)
 
 # Results will be identical across runs
 history = trainer.fit(train_loader, val_loader, epochs=200)
+```
+
+### Handle CUDA Out-of-Memory Errors
+
+```python
+from pydml.utils import AutoBatchSizeReducer, clear_cuda_cache, handle_oom
+
+# Automatic batch size reduction on OOM
+reducer = AutoBatchSizeReducer(initial_batch_size=128, min_batch_size=16)
+
+while reducer.can_reduce():
+    try:
+        train_loader = DataLoader(dataset, batch_size=reducer.get_batch_size())
+        trainer.fit(train_loader, val_loader, epochs=10)
+        break  # Success!
+    except RuntimeError as e:
+        if "out of memory" in str(e).lower():
+            reducer.reduce()
+            clear_cuda_cache()
+
+# Or use the @handle_oom decorator
+@handle_oom
+def train_step(model, data):
+    return model(data)
+
+# Memory monitoring
+from pydml.utils import MemoryMonitor
+
+monitor = MemoryMonitor(warning_threshold=0.9)
+monitor.check()  # Warns if GPU usage > 90%
 ```
 
 ### Train with Different Architectures
