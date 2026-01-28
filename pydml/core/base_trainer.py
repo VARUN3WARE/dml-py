@@ -11,6 +11,8 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 import time
 
+from pydml.utils.reproducibility import set_seed
+
 # Detect Jupyter environment and import appropriate tqdm
 def _is_jupyter():
     """Detect if running in a Jupyter notebook."""
@@ -44,6 +46,7 @@ class BaseCollaborativeTrainer(ABC):
         optimizers: Optional list of optimizers (one per model). If None, creates Adam optimizers.
         schedulers: Optional list of learning rate schedulers
         callbacks: Optional list of callbacks for training hooks
+        seed: Random seed for reproducibility. If None, no seed is set.
     """
     
     def __init__(
@@ -53,7 +56,15 @@ class BaseCollaborativeTrainer(ABC):
         optimizers: Optional[List[torch.optim.Optimizer]] = None,
         schedulers: Optional[List[Any]] = None,
         callbacks: Optional[List[Any]] = None,
+        seed: Optional[int] = None,
     ):
+        # Set random seed for reproducibility if provided
+        if seed is not None:
+            set_seed(seed)
+            self.seed = seed
+        else:
+            self.seed = None
+        
         self.models = models
         self.device = torch.device(device if torch.cuda.is_available() else 'cpu')
         self.num_models = len(models)

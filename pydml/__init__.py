@@ -10,9 +10,11 @@ __license__ = "MIT"
 
 from pydml.trainers.dml import DMLTrainer, DMLConfig
 from pydml.core.base_trainer import BaseCollaborativeTrainer
+from pydml.utils.reproducibility import set_seed
 
 __all__ = [
     "DMLTrainer",
     "DMLConfig",
     "BaseCollaborativeTrainer",
+    "set_seed",
 ]

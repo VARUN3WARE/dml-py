@@ -71,12 +71,13 @@ print(f"Test Accuracy: {test_metrics['val_acc']:.2f}%")
 ## ✨ Features
 
 - 🤝 **Deep Mutual Learning**: Train multiple networks collaboratively
+- � **Reproducibility**: Built-in seed management for consistent results
 - 📊 **Multiple Architectures**: ResNet, MobileNet, WideResNet for CIFAR
 - 🧩 **Modular Design**: Easy to extend and customize
 - 🔬 **Research-Ready**: Built for experimentation
 - 📈 **Analysis Tools**: Robustness testing, metrics, visualization
 - ✅ **Well-Tested**: 11 unit tests, all passing
-- � **Well-Documented**: Examples and inline documentation
+- 📚 **Well-Documented**: Examples and inline documentation
 
 ## 📦 Installation
 
@@ -147,7 +148,23 @@ pip install pytorch-dml
 - [x] CIFAR-100 benchmark
 - [x] Advanced training examples
 
-## � Usage Examples
+## 📚 Usage Examples
+
+### Reproducible Results
+
+```python
+from pydml import DMLTrainer, set_seed
+
+# Set seed for reproducibility
+set_seed(42)
+
+# All random operations will be deterministic
+models = [resnet32(num_classes=100) for _ in range(2)]
+trainer = DMLTrainer(models, device='cuda', seed=42)
+
+# Results will be identical across runs
+history = trainer.fit(train_loader, val_loader, epochs=200)
+```
 
 ### Train with Different Architectures
 
