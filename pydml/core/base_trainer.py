@@ -12,6 +12,12 @@ from torch.utils.data import DataLoader
 import time
 
 from pydml.utils.reproducibility import set_seed
+from pydml.utils.cuda_memory import (
+    clear_cuda_cache, 
+    get_gpu_memory_info, 
+    CUDAOutOfMemoryError,
+    MemoryMonitor
+)
 
 # Detect Jupyter environment and import appropriate tqdm
 def _is_jupyter():
@@ -151,35 +157,56 @@ class BaseCollaborativeTrainer(ABC):
         for batch_idx, (inputs, targets) in enumerate(pbar):
             inputs, targets = inputs.to(self.device), targets.to(self.device)
             
-            # Forward pass for all models
-            outputs = []
-            for model in self.models:
-                output = model(inputs)
-                outputs.append(output)
-            
-            # Compute collaborative loss
-            losses = self.compute_collaborative_loss(outputs, targets)
-            
-            # Backward pass and optimization for each model
-            for i, (optimizer, model) in enumerate(zip(self.optimizers, self.models)):
-                optimizer.zero_grad()
-                loss = losses[f'model_{i}']
-                loss.backward(retain_graph=(i < self.num_models - 1))
-                optimizer.step()
+            try:
+                # Forward pass for all models
+                outputs = []
+                for model in self.models:
+                    output = model(inputs)
+                    outputs.append(output)
                 
-                total_losses[i] += loss.item()
-            
-            # Compute accuracy
-            for i, output in enumerate(outputs):
-                _, predicted = output.max(1)
-                correct[i] += predicted.eq(targets).sum().item()
-            
-            total += targets.size(0)
-            self.global_step += 1
-            
-            # Update progress bar
-            avg_loss = sum(total_losses) / (self.num_models * (batch_idx + 1))
-            pbar.set_postfix({'loss': f'{avg_loss:.4f}'})
+                # Compute collaborative loss
+                losses = self.compute_collaborative_loss(outputs, targets)
+                
+                # Backward pass and optimization for each model
+                for i, (optimizer, model) in enumerate(zip(self.optimizers, self.models)):
+                    optimizer.zero_grad()
+                    loss = losses[f'model_{i}']
+                    loss.backward(retain_graph=(i < self.num_models - 1))
+                    optimizer.step()
+                    
+                    total_losses[i] += loss.item()
+                
+                # Compute accuracy
+                for i, output in enumerate(outputs):
+                    _, predicted = output.max(1)
+                    correct[i] += predicted.eq(targets).sum().item()
+                
+                total += targets.size(0)
+                self.global_step += 1
+                
+                # Update progress bar
+                avg_loss = sum(total_losses) / (self.num_models * (batch_idx + 1))
+                pbar.set_postfix({'loss': f'{avg_loss:.4f}'})
+                
+            except RuntimeError as e:
+                if "out of memory" in str(e).lower():
+                    # Handle CUDA OOM
+                    clear_cuda_cache()
+                    mem_info = get_gpu_memory_info(self.device)
+                    
+                    error_msg = (
+                        f"CUDA out of memory at epoch {epoch}, batch {batch_idx}. "
+                        f"GPU usage: {mem_info['allocated']:.2f}/{mem_info['total']:.2f} GB\n"
+                        "Recovery suggestions:\n"
+                        "1. Reduce batch size in DataLoader\n"
+                        "2. Use gradient checkpointing for models\n"
+                        "3. Enable mixed precision training (AMP)\n"
+                        "4. Reduce model size or number of models\n"
+                        "5. Use gradient accumulation to simulate larger batches"
+                    )
+                    raise CUDAOutOfMemoryError(error_msg) from e
+                else:
+                    raise
         
         # Compute epoch metrics
         metrics = {
