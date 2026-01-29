@@ -75,11 +75,12 @@ print(f"Test Accuracy: {test_metrics['val_acc']:.2f}%")
 - 🛡️ **CUDA OOM Handling**: Automatic out-of-memory error recovery and monitoring
 - ⚡ **Mixed Precision Training**: Automatic FP16/BF16 support for faster training
 - � **Checkpoint Management**: Auto-save, resume training, best model tracking
+- 📉 **LR Scheduling**: Warmup, cosine annealing, pre-configured recipes for optimal convergence
 - 📊 **Multiple Architectures**: ResNet, MobileNet, WideResNet for CIFAR
 - 🧩 **Modular Design**: Easy to extend and customize
 - 🔬 **Research-Ready**: Built for experimentation
 - 📈 **Analysis Tools**: Robustness testing, metrics, visualization
-- ✅ **Well-Tested**: 14+ unit tests, all passing
+- ✅ **Well-Tested**: 40+ unit tests, all passing
 - 📚 **Well-Documented**: Examples and inline documentation
 
 ## 📦 Installation
@@ -180,7 +181,7 @@ manager = CheckpointManager(
 for epoch in range(1, 201):
     train_metrics = trainer.train_epoch(train_loader, epoch)
     val_metrics = trainer.evaluate(val_loader)
-    
+
     # Save with automatic best model tracking
     manager.save(trainer, epoch, {**train_metrics, **val_metrics})
 
@@ -190,6 +191,59 @@ print(f"Loaded best model from epoch {best_epoch}")
 ```
 
 See [examples/checkpoint_resume_demo.py](examples/checkpoint_resume_demo.py) for 7 complete examples.
+
+### 📉 Learning Rate Scheduling
+
+Optimize convergence with advanced LR scheduling including warmup and pre-configured recipes:
+
+```python
+from pydml import DMLTrainer
+from pydml.utils import SchedulerConfig, SchedulerType, WarmupConfig, get_cifar_schedule
+
+# Option 1: Use pre-configured recipe (recommended)
+models = [resnet32() for _ in range(2)]
+optimizers = [torch.optim.SGD(m.parameters(), lr=0.1, momentum=0.9) for m in models]
+
+# CIFAR training recipe with warmup + cosine annealing
+schedulers = get_cifar_schedule(optimizers, total_epochs=200, warmup_epochs=5)
+
+trainer = DMLTrainer(models, optimizers=optimizers, schedulers=schedulers, device='cuda')
+trainer.fit(train_loader, val_loader, epochs=200)
+
+# Option 2: Custom configuration with warmup
+config = SchedulerConfig(
+    scheduler_type=SchedulerType.COSINE,
+    base_lr=0.1,
+    T_max=200,
+    eta_min=0.0,
+    warmup=WarmupConfig(
+        warmup_epochs=5,
+        warmup_start_lr=1e-6,
+        warmup_method='linear'  # 'linear', 'exponential', or 'cosine'
+    )
+)
+
+from pydml.utils import create_schedulers_from_config
+schedulers = create_schedulers_from_config(optimizers, config)
+
+# Available pre-configured recipes:
+# - get_cifar_schedule(): CIFAR-10/100 with cosine + warmup
+# - get_imagenet_schedule(): ImageNet with multistep
+# - get_fine_tuning_schedule(): Transfer learning with gentle decay
+
+# Supported scheduler types:
+# STEP, MULTISTEP, EXPONENTIAL, COSINE, COSINE_WARMRESTART,
+# REDUCE_ON_PLATEAU, ONE_CYCLE, POLYNOMIAL, LINEAR, CONSTANT
+```
+
+**Benefits:**
+- ✅ Improved convergence and higher final accuracy
+- ✅ Warmup prevents unstable early training
+- ✅ Pre-configured recipes for common scenarios
+- ✅ Easy configuration with SchedulerConfig
+- ✅ Compatible with all PyTorch optimizers
+
+See [examples/lr_scheduling_demo.py](examples/lr_scheduling_demo.py) for 8 comprehensive examples and best practices.
 
 ## 🧪 Testing
 
