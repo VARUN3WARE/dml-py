@@ -74,11 +74,12 @@ print(f"Test Accuracy: {test_metrics['val_acc']:.2f}%")
 - 🎲 **Reproducibility**: Built-in seed management for consistent results
 - 🛡️ **CUDA OOM Handling**: Automatic out-of-memory error recovery and monitoring
 - ⚡ **Mixed Precision Training**: Automatic FP16/BF16 support for faster training
+- � **Checkpoint Management**: Auto-save, resume training, best model tracking
 - 📊 **Multiple Architectures**: ResNet, MobileNet, WideResNet for CIFAR
 - 🧩 **Modular Design**: Easy to extend and customize
 - 🔬 **Research-Ready**: Built for experimentation
 - 📈 **Analysis Tools**: Robustness testing, metrics, visualization
-- ✅ **Well-Tested**: 11 unit tests, all passing
+- ✅ **Well-Tested**: 14+ unit tests, all passing
 - 📚 **Well-Documented**: Examples and inline documentation
 
 ## 📦 Installation
@@ -145,10 +146,50 @@ pip install pytorch-dml
 
 ### ✅ Examples
 
-- [x] 16 working demo scripts
+- [x] 17 working demo scripts
 - [x] Quick start guide
 - [x] CIFAR-100 benchmark
 - [x] Advanced training examples
+- [x] Checkpoint/resume workflow
+
+### 💾 Checkpoint Management
+
+Save and resume training seamlessly:
+
+```python
+from pydml import DMLTrainer
+from pydml.utils import CheckpointManager, auto_resume
+
+# Create trainer
+models = [resnet32() for _ in range(2)]
+trainer = DMLTrainer(models, device='cuda')
+
+# Option 1: Automatic resume
+start_epoch = auto_resume(trainer, checkpoint_dir='checkpoints')
+trainer.fit(train_loader, val_loader, epochs=200, start_epoch=start_epoch)
+
+# Option 2: Manual checkpoint management
+manager = CheckpointManager(
+    checkpoint_dir='checkpoints',
+    max_to_keep=5,  # Keep only 5 recent checkpoints
+    keep_best=True,  # Always preserve best model
+    monitor='val_loss',
+    mode='min'
+)
+
+for epoch in range(1, 201):
+    train_metrics = trainer.train_epoch(train_loader, epoch)
+    val_metrics = trainer.evaluate(val_loader)
+    
+    # Save with automatic best model tracking
+    manager.save(trainer, epoch, {**train_metrics, **val_metrics})
+
+# Load best model for deployment
+best_epoch = manager.load_best(trainer)
+print(f"Loaded best model from epoch {best_epoch}")
+```
+
+See [examples/checkpoint_resume_demo.py](examples/checkpoint_resume_demo.py) for 7 complete examples.
 
 ## 🧪 Testing
 

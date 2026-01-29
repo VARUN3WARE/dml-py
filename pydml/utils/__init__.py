@@ -14,6 +14,7 @@ from .cuda_memory import (
     MemoryMonitor,
     CUDAOutOfMemoryError
 )
+from .checkpointing import CheckpointManager, auto_resume
 from .amp import AMPConfig, AMPManager, apply_amp_to_trainer
 from .distributed import DistributedConfig, DistributedManager, launch_distributed, apply_distributed_to_trainer
 from .export import ExportConfig, ModelExporter, export_ensemble, quick_export
@@ -66,6 +67,8 @@ __all__ = [
     'AutoBatchSizeReducer',
     'MemoryMonitor',
     'CUDAOutOfMemoryError',
+    'CheckpointManager',
+    'auto_resume',
     'AMPConfig',
     'AMPManager',
     'apply_amp_to_trainer',

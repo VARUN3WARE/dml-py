@@ -307,6 +307,7 @@ class BaseCollaborativeTrainer(ABC):
         val_loader: Optional[DataLoader] = None,
         epochs: int = 100,
         verbose: bool = True,
+        start_epoch: int = 0,
     ) -> Dict[str, List[float]]:
         """
         Train the models for multiple epochs.
@@ -316,11 +317,12 @@ class BaseCollaborativeTrainer(ABC):
             val_loader: Optional DataLoader for validation data
             epochs: Number of epochs to train
             verbose: Whether to print training progress
+            start_epoch: Starting epoch (for resuming training)
         
         Returns:
             Training history dictionary
         """
-        for epoch in range(1, epochs + 1):
+        for epoch in range(start_epoch + 1, epochs + 1):
             self.current_epoch = epoch
             start_time = time.time()
             

@@ -19,6 +19,7 @@ from pydml.utils.cuda_memory import (
     MemoryMonitor
 )
 from pydml.utils.amp import AMPConfig, AMPManager
+from pydml.utils.checkpointing import CheckpointManager, auto_resume
 
 __all__ = [
     "DMLTrainer",
@@ -32,4 +33,6 @@ __all__ = [
     "MemoryMonitor",
     "AMPConfig",
     "AMPManager",
+    "CheckpointManager",
+    "auto_resume",
 ]
