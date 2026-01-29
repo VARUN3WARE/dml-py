@@ -102,6 +102,7 @@ class ModelCheckpoint(Callback):
         mode: 'min' for metrics to minimize, 'max' for metrics to maximize
         save_best_only: If True, only save when monitored metric improves
         save_freq: Save every N epochs (if save_best_only is False)
+        verbose: Print messages when saving
     """
     
     def __init__(
@@ -111,38 +112,58 @@ class ModelCheckpoint(Callback):
         mode: str = 'min',
         save_best_only: bool = True,
         save_freq: int = 1,
+        verbose: bool = True,
     ):
         self.filepath = filepath
         self.monitor = monitor
         self.mode = mode
         self.save_best_only = save_best_only
         self.save_freq = save_freq
+        self.verbose = verbose
         
         self.best_value = float('inf') if mode == 'min' else float('-inf')
+        self.best_epoch = None
     
     def on_epoch_end(self, trainer: Any, epoch: int, metrics: Dict[str, float]):
         """Save checkpoint if conditions are met."""
+        should_save = False
+        is_best = False
+        
         if self.save_best_only:
             if self.monitor not in metrics:
+                if self.verbose:
+                    print(f"Warning: Metric '{self.monitor}' not found in metrics")
                 return
             
             current_value = metrics[self.monitor]
             
             if self.mode == 'min':
-                improved = current_value < self.best_value
+                is_best = current_value < self.best_value
             else:
-                improved = current_value > self.best_value
+                is_best = current_value > self.best_value
             
-            if improved:
+            if is_best:
                 self.best_value = current_value
-                filepath = self.filepath.format(epoch=epoch, **metrics)
-                trainer.save_checkpoint(filepath)
-                print(f"Saved best model to {filepath}")
+                self.best_epoch = epoch
+                should_save = True
         else:
             if epoch % self.save_freq == 0:
-                filepath = self.filepath.format(epoch=epoch, **metrics)
-                trainer.save_checkpoint(filepath)
-                print(f"Saved checkpoint to {filepath}")
+                should_save = True
+        
+        if should_save:
+            filepath = self.filepath.format(epoch=epoch, **metrics)
+            
+            # Create directory if it doesn't exist
+            import os
+            os.makedirs(os.path.dirname(filepath) if os.path.dirname(filepath) else '.', exist_ok=True)
+            
+            trainer.save_checkpoint(filepath)
+            
+            if self.verbose:
+                if is_best:
+                    print(f"✓ Saved best model to {filepath} ({self.monitor}: {self.best_value:.4f})")
+                else:
+                    print(f"✓ Saved checkpoint to {filepath}")
 
 
 class LearningRateLogger(Callback):
