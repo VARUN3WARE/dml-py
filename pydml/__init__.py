@@ -20,6 +20,15 @@ from pydml.utils.cuda_memory import (
 )
 from pydml.utils.amp import AMPConfig, AMPManager
 from pydml.utils.checkpointing import CheckpointManager, auto_resume
+from pydml.utils.lr_scheduling import (
+    SchedulerType,
+    SchedulerConfig,
+    WarmupConfig,
+    create_schedulers_from_config,
+    get_cifar_schedule,
+    get_imagenet_schedule,
+    get_fine_tuning_schedule,
+)
 
 __all__ = [
     "DMLTrainer",
@@ -35,4 +44,11 @@ __all__ = [
     "AMPManager",
     "CheckpointManager",
     "auto_resume",
+    "SchedulerType",
+    "SchedulerConfig",
+    "WarmupConfig",
+    "create_schedulers_from_config",
+    "get_cifar_schedule",
+    "get_imagenet_schedule",
+    "get_fine_tuning_schedule",
 ]
