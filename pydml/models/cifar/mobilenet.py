@@ -14,7 +14,8 @@ class InvertedResidual(nn.Module):
     def __init__(self, inp, oup, stride, expand_ratio):
         super(InvertedResidual, self).__init__()
         self.stride = stride
-        assert stride in [1, 2]
+        if stride not in [1, 2]:
+            raise ValueError(f"stride must be 1 or 2, got {stride}")
         
         hidden_dim = int(inp * expand_ratio)
         self.use_res_connect = self.stride == 1 and inp == oup
