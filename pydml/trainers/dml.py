@@ -14,6 +14,11 @@ import torch.nn as nn
 
 from pydml.core.base_trainer import BaseCollaborativeTrainer
 from pydml.core.losses import CrossEntropyLoss, KLDivergenceLoss
+from pydml.utils.validation import (
+    validate_positive_float,
+    validate_string_choice,
+    validate_temperature,
+)
 
 
 @dataclass
@@ -26,11 +31,36 @@ class DMLConfig:
         supervised_weight: Weight for supervised (cross-entropy) loss (default: 1.0)
         mimicry_weight: Weight for mimicry (KL divergence) losses (default: 1.0)
         peer_selection: Strategy for selecting peers ('all', 'best', 'random', 'dynamic')
+        
+    Raises:
+        TypeError: If arguments have wrong types
+        ValueError: If arguments have invalid values
     """
     temperature: float = 3.0
     supervised_weight: float = 1.0
     mimicry_weight: float = 1.0
     peer_selection: str = 'all'
+    
+    def __post_init__(self):
+        """Validate configuration after initialization."""
+        self.temperature = validate_temperature(self.temperature)
+        self.supervised_weight = validate_positive_float(
+            self.supervised_weight, "supervised_weight", allow_zero=True
+        )
+        self.mimicry_weight = validate_positive_float(
+            self.mimicry_weight, "mimicry_weight", allow_zero=True
+        )
+        self.peer_selection = validate_string_choice(
+            self.peer_selection,
+            "peer_selection",
+            ['all', 'best', 'random', 'dynamic']
+        )
+        
+        # Ensure at least one weight is positive
+        if self.supervised_weight == 0 and self.mimicry_weight == 0:
+            raise ValueError(
+                "At least one of supervised_weight or mimicry_weight must be positive"
+            )
 
 
 class DMLTrainer(BaseCollaborativeTrainer):

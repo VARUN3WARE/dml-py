@@ -359,6 +359,61 @@ except ValueError as e:
 
 See [examples/validation_demo.py](examples/validation_demo.py) for interactive demonstration.
 
+### ✅ Comprehensive Input Validation
+
+PyDML includes extensive input validation to catch errors early and provide clear, actionable error messages:
+
+```python
+from pydml import DMLConfig
+from pydml.utils import get_cifar10_loaders
+
+# Example 1: Invalid batch size
+try:
+    train_loader, val_loader, test_loader = get_cifar10_loaders(
+        batch_size=-32  # Invalid: negative
+    )
+except ValueError as e:
+    print(e)
+    # Output: batch_size must be a positive integer, got -32
+
+# Example 2: Invalid validation split
+try:
+    train_loader, val_loader, test_loader = get_cifar10_loaders(
+        val_split=1.5  # Invalid: > 1.0
+    )
+except ValueError as e:
+    print(e)
+    # Output: val_split must be in range [0.0, 1.0], got 1.5
+
+# Example 3: Invalid DML configuration
+try:
+    config = DMLConfig(
+        temperature=-1.0,  # Invalid: negative
+        peer_selection='invalid'  # Invalid: not in choices
+    )
+except ValueError as e:
+    print(e)
+    # Output: temperature must be a positive number, got -1.0
+```
+
+**Validated parameters:**
+
+- ✅ **Data Loading:** batch_size, num_workers, val_split, data_dir
+- ✅ **Training:** epochs, learning_rate, temperature, weights
+- ✅ **Models:** model count (≥2), model types, optimizer count
+- ✅ **Configuration:** peer_selection, device specification
+- ✅ **Tensors:** shape validation, dimension checking
+
+**Benefits:**
+
+- 🎯 Catch errors at configuration time, not runtime
+- 📝 Clear error messages with actual vs. expected values
+- 🔍 Easier debugging with specific parameter names
+- ⚡ Fail fast with actionable feedback
+- 🛡️ Type and value validation for all inputs
+
+See [examples/input_validation_demo.py](examples/input_validation_demo.py) for 7 comprehensive examples.
+
 ## 🧪 Testing
 
 Run the test suite:
