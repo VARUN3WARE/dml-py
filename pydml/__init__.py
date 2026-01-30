@@ -29,6 +29,12 @@ from pydml.utils.lr_scheduling import (
     get_imagenet_schedule,
     get_fine_tuning_schedule,
 )
+from pydml.analysis import (
+    TrainingMonitor,
+    OverfittingStatus,
+    TrainingMetrics,
+    OverfittingReport,
+)
 
 __all__ = [
     "DMLTrainer",
@@ -51,4 +57,8 @@ __all__ = [
     "get_cifar_schedule",
     "get_imagenet_schedule",
     "get_fine_tuning_schedule",
+    "TrainingMonitor",
+    "OverfittingStatus",
+    "TrainingMetrics",
+    "OverfittingReport",
 ]
