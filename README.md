@@ -264,21 +264,21 @@ monitor = TrainingMonitor(
 for epoch in range(1, 201):
     train_metrics = trainer.train_epoch(train_loader, epoch)
     val_metrics = trainer.evaluate(val_loader)
-    
+
     # Update monitor
     monitor.update(epoch, train_metrics, val_metrics)
-    
+
     # Check for overfitting
     if monitor.is_overfitting(strict=True):
         report = monitor.get_overfitting_report()
         print(report)  # Detailed report with recommendations
-        
+
         # Get actionable suggestions
         if report.status == OverfittingStatus.SEVERE_OVERFITTING:
             print("⚠️ Severe overfitting detected!")
             for rec in report.recommendations:
                 print(f"  • {rec}")
-    
+
     # Early stopping
     if monitor.should_stop_early(patience=10, min_delta=0.1):
         print(f"Early stopping at epoch {epoch}")
@@ -325,6 +325,39 @@ Recommendations:
 ```
 
 See [examples/training_monitor_demo.py](examples/training_monitor_demo.py) for 7 comprehensive examples and best practices.
+
+### 🛡️ Production-Safe Validation
+
+All input validation uses proper exceptions (ValueError) instead of assert statements, ensuring that validation logic cannot be bypassed when Python is run with optimization flags (`-O` or `-OO`):
+
+```python
+from pydml import DMLTrainer
+from pydml.models.cifar import resnet32
+
+# Validation always works, even with python -O
+models = [resnet32() for _ in range(3)]
+optimizers = [torch.optim.SGD(models[0].parameters(), lr=0.1)]  # Wrong count!
+
+try:
+    trainer = DMLTrainer(models, optimizers=optimizers)
+except ValueError as e:
+    print(f"Error: {e}")
+    # Output: Number of optimizers (1) must match number of models (3)
+```
+
+**Protected validations:**
+
+- ✅ Optimizer count must match model count
+- ✅ MobileNet stride must be 1 or 2
+- ✅ WideResNet depth must satisfy `(depth - 4) % 6 == 0`
+
+**Why this matters:**
+
+- Assert statements are removed when running `python -O` or `python -OO`
+- This can lead to silent failures in production
+- Using ValueError ensures validation always works
+
+See [examples/validation_demo.py](examples/validation_demo.py) for interactive demonstration.
 
 ## 🧪 Testing
 

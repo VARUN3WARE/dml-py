@@ -91,8 +91,10 @@ class BaseCollaborativeTrainer(ABC):
                 for model in self.models
             ]
         else:
-            assert len(optimizers) == self.num_models, \
-                f"Number of optimizers ({len(optimizers)}) must match number of models ({self.num_models})"
+            if len(optimizers) != self.num_models:
+                raise ValueError(
+                    f"Number of optimizers ({len(optimizers)}) must match number of models ({self.num_models})"
+                )
             self.optimizers = optimizers
         
         # Setup schedulers
