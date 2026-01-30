@@ -237,6 +237,7 @@ schedulers = create_schedulers_from_config(optimizers, config)
 ```
 
 **Benefits:**
+
 - ✅ Improved convergence and higher final accuracy
 - ✅ Warmup prevents unstable early training
 - ✅ Pre-configured recipes for common scenarios
@@ -244,6 +245,86 @@ schedulers = create_schedulers_from_config(optimizers, config)
 - ✅ Compatible with all PyTorch optimizers
 
 See [examples/lr_scheduling_demo.py](examples/lr_scheduling_demo.py) for 8 comprehensive examples and best practices.
+
+### 📊 Training Monitoring & Overfitting Detection
+
+Automatically detect overfitting, track training progress, and get actionable recommendations:
+
+```python
+from pydml import DMLTrainer, TrainingMonitor, OverfittingStatus
+
+# Create trainer and monitor
+trainer = DMLTrainer([model1, model2], device='cuda')
+monitor = TrainingMonitor(
+    window_size=5,              # Rolling window for trend analysis
+    overfitting_threshold=5.0,  # Alert when gap > 5%
+)
+
+# Training loop with monitoring
+for epoch in range(1, 201):
+    train_metrics = trainer.train_epoch(train_loader, epoch)
+    val_metrics = trainer.evaluate(val_loader)
+    
+    # Update monitor
+    monitor.update(epoch, train_metrics, val_metrics)
+    
+    # Check for overfitting
+    if monitor.is_overfitting(strict=True):
+        report = monitor.get_overfitting_report()
+        print(report)  # Detailed report with recommendations
+        
+        # Get actionable suggestions
+        if report.status == OverfittingStatus.SEVERE_OVERFITTING:
+            print("⚠️ Severe overfitting detected!")
+            for rec in report.recommendations:
+                print(f"  • {rec}")
+    
+    # Early stopping
+    if monitor.should_stop_early(patience=10, min_delta=0.1):
+        print(f"Early stopping at epoch {epoch}")
+        break
+
+# Get best model epoch
+best_epoch, best_acc = monitor.get_best_epoch('val_acc')
+print(f"Best model: epoch {best_epoch} with {best_acc:.2f}% accuracy")
+
+# Training summary
+print(monitor.get_summary())
+```
+
+**Key Features:**
+
+- ✅ **Automatic Overfitting Detection:** Monitors generalization gap (train vs val accuracy)
+- ✅ **Severity Classification:** NO_OVERFITTING, MILD, MODERATE, SEVERE, UNDERFITTING
+- ✅ **Actionable Recommendations:** Specific suggestions based on training state
+- ✅ **Trend Analysis:** Track if metrics are improving, degrading, or stable
+- ✅ **Early Stopping:** Automatic detection with configurable patience
+- ✅ **Best Model Tracking:** Find optimal checkpoint for deployment
+- ✅ **Comprehensive Reports:** Detailed analysis with confidence scores
+
+**Example Output:**
+
+```
+============================================================
+Overfitting Analysis Report
+============================================================
+Status: Moderate Overfitting
+Confidence: 85.0%
+
+Metrics:
+  Train Accuracy: 92.50%
+  Val Accuracy:   85.00%
+  Generalization Gap: +7.50%
+
+Recommendations:
+  • Increase regularization (weight decay: 1e-4 to 5e-4)
+  • Add/increase dropout (0.2-0.3)
+  • Apply data augmentation
+  • Monitor validation metrics more closely
+============================================================
+```
+
+See [examples/training_monitor_demo.py](examples/training_monitor_demo.py) for 7 comprehensive examples and best practices.
 
 ## 🧪 Testing
 

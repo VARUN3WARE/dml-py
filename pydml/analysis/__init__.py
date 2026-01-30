@@ -17,6 +17,13 @@ from .visualization import (
 
 from .loss_landscape import LossLandscape, quick_landscape_analysis
 
+from .training_monitor import (
+    OverfittingStatus,
+    TrainingMetrics,
+    OverfittingReport,
+    TrainingMonitor,
+)
+
 __all__ = [
     'test_robustness_to_noise',
     'compute_flatness_metric',
@@ -29,4 +36,8 @@ __all__ = [
     'create_training_dashboard',
     'LossLandscape',
     'quick_landscape_analysis',
+    'OverfittingStatus',
+    'TrainingMetrics',
+    'OverfittingReport',
+    'TrainingMonitor',
 ]
