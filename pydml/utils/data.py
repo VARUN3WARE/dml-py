@@ -9,6 +9,13 @@ from torch.utils.data import DataLoader, random_split
 from torchvision import datasets, transforms
 from typing import Tuple, Optional
 
+from pydml.utils.validation import (
+    validate_positive_int,
+    validate_probability,
+    validate_num_workers,
+    validate_batch_size,
+)
+
 
 def get_cifar10_loaders(
     data_dir: str = './data',
@@ -24,12 +31,27 @@ def get_cifar10_loaders(
         data_dir: Directory to store/load the dataset
         batch_size: Batch size for training
         num_workers: Number of worker processes for data loading
-        val_split: Fraction of training data to use for validation
+        val_split: Fraction of training data to use for validation (0.0 to 1.0)
         download: Whether to download the dataset if not found
     
     Returns:
         Tuple of (train_loader, val_loader, test_loader)
+        
+    Raises:
+        TypeError: If arguments have wrong types
+        ValueError: If arguments have invalid values
     """
+    # Validate inputs
+    if not isinstance(data_dir, str):
+        raise TypeError(f"data_dir must be a string, got {type(data_dir).__name__}")
+    
+    batch_size = validate_batch_size(batch_size)
+    num_workers = validate_num_workers(num_workers)
+    val_split = validate_probability(val_split, "val_split")
+    
+    if not isinstance(download, bool):
+        raise TypeError(f"download must be a boolean, got {type(download).__name__}")
+    
     # Data augmentation for training
     transform_train = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
@@ -101,12 +123,27 @@ def get_cifar100_loaders(
         data_dir: Directory to store/load the dataset
         batch_size: Batch size for training
         num_workers: Number of worker processes for data loading
-        val_split: Fraction of training data to use for validation
+        val_split: Fraction of training data to use for validation (0.0 to 1.0)
         download: Whether to download the dataset if not found
     
     Returns:
         Tuple of (train_loader, val_loader, test_loader)
+        
+    Raises:
+        TypeError: If arguments have wrong types
+        ValueError: If arguments have invalid values
     """
+    # Validate inputs
+    if not isinstance(data_dir, str):
+        raise TypeError(f"data_dir must be a string, got {type(data_dir).__name__}")
+    
+    batch_size = validate_batch_size(batch_size)
+    num_workers = validate_num_workers(num_workers)
+    val_split = validate_probability(val_split, "val_split")
+    
+    if not isinstance(download, bool):
+        raise TypeError(f"download must be a boolean, got {type(download).__name__}")
+    
     # Data augmentation for training
     transform_train = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
