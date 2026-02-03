@@ -120,7 +120,7 @@ class TestEnsemblePredictions:
         models = [SimpleModel() for _ in range(2)]
         inputs = torch.randn(4, 10)
         
-        with pytest.raises(ValueError, match="Unknown ensemble method"):
+        with pytest.raises(ValueError, match="unknown ensemble method"):
             ensemble_predict(models, inputs, method='invalid')
     
     def test_ensemble_predict_weighted_no_weights(self):

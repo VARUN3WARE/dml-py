@@ -64,7 +64,11 @@ class AttentionTransferLoss(nn.Module):
             # Mean of absolute activations
             attention = torch.mean(torch.abs(feature_map), dim=1)
         else:
-            raise ValueError(f"Unknown attention type: {self.attention_type}")
+            valid_types = ['sum_squares', 'mean_squares', 'mean_abs']
+            raise ValueError(
+                f"unknown attention_type '{self.attention_type}', "
+                f"must be one of {valid_types}"
+            )
         
         # Normalize if requested
         if self.normalize:
@@ -151,7 +155,10 @@ class MultiLayerAttentionTransferLoss(nn.Module):
             Aggregated attention transfer loss
         """
         if len(student_features_list) != len(teacher_features_list):
-            raise ValueError("Number of student and teacher feature maps must match")
+            raise ValueError(
+                f"number of student and teacher feature maps must match, "
+                f"got {len(student_features_list)} student features and {len(teacher_features_list)} teacher features"
+            )
         
         num_layers = len(student_features_list)
         
@@ -161,7 +168,10 @@ class MultiLayerAttentionTransferLoss(nn.Module):
         else:
             weights = self.layer_weights
             if len(weights) != num_layers:
-                raise ValueError("Number of weights must match number of layers")
+                raise ValueError(
+                    f"number of weights must match number of layers, "
+                    f"got {len(weights)} weights for {num_layers} layers"
+                )
         
         # Compute weighted sum of attention losses
         total_loss = 0.0
@@ -231,7 +241,11 @@ class AttentionMatchingLoss(nn.Module):
         elif self.aggregation == 'sum':
             return total_loss
         else:
-            raise ValueError(f"Unknown aggregation: {self.aggregation}")
+            valid_aggregations = ['mean', 'sum']
+            raise ValueError(
+                f"unknown aggregation '{self.aggregation}', "
+                f"must be one of {valid_aggregations}"
+            )
 
 
 class SpatialAttentionVisualization:

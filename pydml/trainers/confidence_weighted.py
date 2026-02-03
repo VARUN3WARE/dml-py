@@ -138,7 +138,11 @@ class ConfidenceWeightedDML(BaseCollaborativeTrainer):
                 weight = torch.exp(conf * self.config.temperature)
             
             else:
-                raise ValueError(f"Unknown weighting strategy: {self.config.weighting_strategy}")
+                valid_strategies = ['softmax', 'linear', 'exp']
+                raise ValueError(
+                    f"unknown weighting strategy '{self.config.weighting_strategy}', "
+                    f"must be one of {valid_strategies}"
+                )
             
             # Apply threshold (create new tensor, don't use in-place)
             weight = torch.where(

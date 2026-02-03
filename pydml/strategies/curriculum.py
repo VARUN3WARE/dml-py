@@ -246,7 +246,11 @@ class CurriculumStrategy:
                 models, dataset, device
             )
         else:
-            raise ValueError(f"Unknown strategy: {self.strategy}")
+            valid_strategies = ['confidence', 'loss', 'agreement']
+            raise ValueError(
+                f"unknown curriculum strategy '{self.strategy}', "
+                f"must be one of {valid_strategies}"
+            )
         
         # Create curriculum sampler
         def schedule(epoch):

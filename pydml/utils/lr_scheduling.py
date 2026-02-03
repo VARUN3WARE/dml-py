@@ -49,11 +49,11 @@ class WarmupConfig:
     def __post_init__(self):
         """Validate configuration."""
         if self.warmup_epochs < 0:
-            raise ValueError("warmup_epochs must be non-negative")
+            raise ValueError(f"warmup_epochs must be non-negative, got {self.warmup_epochs}")
         if self.warmup_start_lr <= 0:
-            raise ValueError("warmup_start_lr must be positive")
+            raise ValueError(f"warmup_start_lr must be positive, got {self.warmup_start_lr}")
         if self.warmup_method not in ['linear', 'exponential', 'cosine']:
-            raise ValueError(f"warmup_method must be 'linear', 'exponential', or 'cosine', got {self.warmup_method}")
+            raise ValueError(f"warmup_method must be one of ['linear', 'exponential', 'cosine'], got '{self.warmup_method}'")
 
 
 @dataclass
@@ -261,7 +261,7 @@ def create_scheduler_from_config(
     
     elif config.scheduler_type == SchedulerType.MULTISTEP:
         if config.milestones is None:
-            raise ValueError("milestones must be specified for MultiStepLR")
+            raise ValueError("milestones must be specified for MultiStepLR scheduler, got None")
         main_scheduler = MultiStepLR(
             optimizer,
             milestones=config.milestones,
@@ -300,7 +300,7 @@ def create_scheduler_from_config(
     
     elif config.scheduler_type == SchedulerType.ONE_CYCLE:
         if config.total_steps is None:
-            raise ValueError("total_steps must be specified for OneCycleLR")
+            raise ValueError("total_steps must be specified for OneCycleLR scheduler, got None")
         main_scheduler = OneCycleLR(
             optimizer,
             max_lr=config.max_lr,
@@ -329,7 +329,7 @@ def create_scheduler_from_config(
         main_scheduler = LambdaLR(optimizer, lr_lambda=lambda epoch: 1.0)
     
     else:
-        raise ValueError(f"Unsupported scheduler type: {config.scheduler_type}")
+        raise ValueError(f"unsupported scheduler type '{config.scheduler_type}', must be one of {[t.value for t in SchedulerType]}")
     
     # Add warmup if specified
     if config.warmup and config.warmup.warmup_epochs > 0:

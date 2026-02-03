@@ -192,7 +192,11 @@ class DiversePeersSelector(PeerSelector):
             return 1.0 - cos_sim
         
         else:
-            raise ValueError(f"Unknown diversity metric: {metric}")
+            valid_metrics = ["kl_div", "l2", "cosine"]
+            raise ValueError(
+                f"unknown diversity metric '{metric}', "
+                f"must be one of {valid_metrics}"
+            )
 
 
 class CurriculumPeersSelector(PeerSelector):
@@ -348,7 +352,11 @@ def create_peer_selector(config: PeerSelectionConfig) -> PeerSelector:
     }
     
     if config.strategy not in strategy_map:
-        raise ValueError(f"Unknown peer selection strategy: {config.strategy}")
+        valid_strategies = list(strategy_map.keys())
+        raise ValueError(
+            f"unknown peer selection strategy '{config.strategy}', "
+            f"must be one of {valid_strategies}"
+        )
     
     return strategy_map[config.strategy](config)
 
