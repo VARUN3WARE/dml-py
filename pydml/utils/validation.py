@@ -491,6 +491,6 @@ def validate_weights(weights: Any, num_models: int) -> List[float]:
     
     # Check that at least one weight is positive
     if sum(validated_weights) == 0:
-        raise ValueError("At least one weight must be positive")
+        raise ValueError("at least one weight must be positive, got all zeros")
     
     return validated_weights

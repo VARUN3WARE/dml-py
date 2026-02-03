@@ -412,7 +412,7 @@ class TestWeights:
     def test_all_zero_rejected(self):
         """Test that all-zero weights are rejected."""
         weights = [0.0, 0.0]
-        with pytest.raises(ValueError, match="At least one weight must be positive"):
+        with pytest.raises(ValueError, match="at least one weight must be positive"):
             validate_weights(weights, num_models=2)
     
     def test_non_numeric_rejected(self):

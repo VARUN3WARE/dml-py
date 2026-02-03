@@ -107,7 +107,9 @@ class HyperparameterSearcher:
     def get_best_config(self) -> Tuple[Dict, float]:
         """Get best configuration and its metric value."""
         if not self.results:
-            raise ValueError("No search results available")
+            raise ValueError(
+                "no search results available, run search() first before calling get_best_config()"
+            )
         
         best_idx = np.argmax([r['metric'] for r in self.results])
         if self.direction == 'minimize':
@@ -390,7 +392,11 @@ def quick_search(
         searcher = OptunaSearcher(objective_fn, suggest_fn, 'metric', 'maximize')
         best_config = searcher.search(n_trials=n_trials)
     else:
-        raise ValueError(f"Unknown method: {method}")
+        valid_methods = ['grid', 'random', 'optuna']
+        raise ValueError(
+            f"unknown search method '{method}', "
+            f"must be one of {valid_methods}"
+        )
     
     # Save results
     searcher.save_results(output_dir / 'search_results.json')

@@ -42,12 +42,18 @@ def ensemble_predict(
         return voting_predictions(models, inputs)
     elif method == 'weighted':
         if weights is None:
-            raise ValueError("weights must be provided for weighted ensemble")
+            raise ValueError(
+                "weights must be provided for 'weighted' ensemble method, got None"
+            )
         return weighted_predictions(models, inputs, weights, temperature)
     elif method == 'max':
         return max_confidence_predictions(models, inputs)
     else:
-        raise ValueError(f"Unknown ensemble method: {method}")
+        valid_methods = ['average', 'vote', 'weighted', 'max']
+        raise ValueError(
+            f"unknown ensemble method '{method}', "
+            f"must be one of {valid_methods}"
+        )
 
 
 def average_predictions(

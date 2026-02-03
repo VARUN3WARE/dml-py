@@ -360,7 +360,11 @@ def create_temperature_scheduler(config: TemperatureSchedulerConfig) -> Temperat
     }
     
     if config.strategy not in scheduler_map:
-        raise ValueError(f"Unknown temperature strategy: {config.strategy}")
+        valid_strategies = list(scheduler_map.keys())
+        raise ValueError(
+            f"unknown temperature strategy '{config.strategy}', "
+            f"must be one of {valid_strategies}"
+        )
     
     return scheduler_map[config.strategy](config)
 
