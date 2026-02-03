@@ -6,10 +6,12 @@
 [![PyPI](https://img.shields.io/pypi/v/pytorch-dml)](https://pypi.org/project/pytorch-dml/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](tests/)
+[![Documentation](https://img.shields.io/badge/docs-sphinx-blue.svg)](https://varun3ware.github.io/dml-py/)
 
 **pytorch-dml** is a production-ready library for collaborative neural network training, incorporating Deep Mutual Learning (DML) and related research advances.
 
-> 🎉 **Now on PyPI!** Install with `pip install pytorch-dml` - Production-ready with 13/13 tests passing
+> 🎉 **Now on PyPI!** Install with `pip install pytorch-dml` - Production-ready with 295 tests passing  
+> 📚 **[Read the full documentation →](docs/README.md)** | [API Reference](docs/api/core.md) | [Tutorials](docs/tutorials/basic_dml.md)
 
 ## 🚀 Quick Start
 

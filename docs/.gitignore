@@ -1,0 +1,14 @@
+# Sphinx build outputs
+_build/
+_static/
+_templates/
+
+# Auto-generated files
+*.pyc
+__pycache__/
+.DS_Store
+
+# Backup files
+*~
+*.bak
+*.swp
