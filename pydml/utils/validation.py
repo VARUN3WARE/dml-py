@@ -494,3 +494,158 @@ def validate_weights(weights: Any, num_models: int) -> List[float]:
         raise ValueError("at least one weight must be positive, got all zeros")
     
     return validated_weights
+
+
+def validate_model_compatibility(models, device='cpu'):
+    """
+    Validate that all models are compatible for mutual learning.
+    
+    This function performs comprehensive validation:
+    - Checks all models are torch.nn.Module instances
+    - Verifies models have trainable parameters
+    - Validates all models produce same output dimension
+    - Provides detailed error messages showing exact mismatches
+    
+    Args:
+        models: List of PyTorch models
+        device: Device to use for validation ('cpu' or 'cuda')
+        
+    Returns:
+        int: The validated output dimension shared by all models
+        
+    Raises:
+        TypeError: If any model is not a torch.nn.Module
+        ValueError: If models have no parameters or mismatched output dimensions
+    """
+    import torch
+    
+    if not isinstance(models, (list, tuple)):
+        raise TypeError(f"models must be a list or tuple, got {type(models).__name__}")
+    
+    if len(models) == 0:
+        raise ValueError("models list cannot be empty")
+    
+    # Validate all are torch modules
+    for i, model in enumerate(models):
+        if not isinstance(model, torch.nn.Module):
+            raise TypeError(
+                f"models[{i}] must be a torch.nn.Module instance, "
+                f"got {type(model).__name__}"
+            )
+    
+    # Check each model has parameters
+    model_param_counts = []
+    for i, model in enumerate(models):
+        param_count = sum(p.numel() for p in model.parameters())
+        model_param_counts.append(param_count)
+        if param_count == 0:
+            raise ValueError(
+                f"models[{i}] has no parameters. "
+                f"All models must have trainable parameters for mutual learning."
+            )
+    
+    # Determine input shape by inspecting first model's first layer
+    # This is more reliable than guessing common shapes
+    first_model = models[0]
+    input_shape = None
+    
+    # Try to infer input shape from first layer
+    for module in first_model.modules():
+        if isinstance(module, torch.nn.Conv2d):
+            # Convolutional input: batch_size=2, channels, height, width
+            input_shape = (2, module.in_channels, 32, 32)
+            break
+        elif isinstance(module, torch.nn.Linear):
+            # Linear input: batch_size=2, features
+            input_shape = (2, module.in_features)
+            break
+    
+    # Fallback: try common shapes if inspection failed
+    if input_shape is None:
+        test_shapes = [(2, 3, 32, 32), (2, 1, 28, 28), (2, 784), (2, 10)]
+    else:
+        test_shapes = [input_shape]
+    
+    # For mixed architectures, we need to try different shapes per model
+    # Store validated output dimension for each model
+    model_outputs = []
+    
+    for i, model in enumerate(models):
+        model_validated = False
+        model_error = None
+        
+        # Try to infer input shape for this specific model
+        model_shape = None
+        for module in model.modules():
+            if isinstance(module, torch.nn.Conv2d):
+                model_shape = (2, module.in_channels, 32, 32)
+                break
+            elif isinstance(module, torch.nn.Linear):
+                model_shape = (2, module.in_features)
+                break
+        
+        # Use model-specific shape or try all common shapes
+        if model_shape is not None:
+            shapes_to_try = [model_shape]
+        else:
+            shapes_to_try = [(2, 3, 32, 32), (2, 1, 28, 28), (2, 784), (2, 10)]
+        
+        for shape in shapes_to_try:
+            try:
+                with torch.no_grad():
+                    dummy_input = torch.randn(*shape).to(device)
+                    
+                    # Move input to model's device
+                    try:
+                        model_device = next(model.parameters()).device
+                        model_input = dummy_input.to(model_device)
+                    except StopIteration:
+                        # Should not happen due to parameter count check above
+                        raise ValueError(f"models[{i}] has no parameters")
+                    
+                    # Get output dimension
+                    output = model(model_input)
+                    if not isinstance(output, torch.Tensor):
+                        raise ValueError(
+                            f"models[{i}] returned {type(output).__name__}, "
+                            f"expected torch.Tensor"
+                        )
+                    
+                    output_dim = output.shape[-1]
+                    model_outputs.append((i, output_dim))
+                    model_validated = True
+                    break  # Successfully validated this model
+                    
+            except (RuntimeError, ValueError) as e:
+                # Shape mismatch or non-tensor output, try next shape
+                model_error = str(e)
+                # If it's a non-tensor error, re-raise immediately
+                if "expected torch.Tensor" in str(e):
+                    raise
+                continue
+        
+        if not model_validated:
+            raise ValueError(
+                f"Could not validate models[{i}] with test inputs. "
+                f"Last error: {model_error}"
+            )
+    
+    # Check all output dimensions match
+    unique_dims = set(dim for _, dim in model_outputs)
+    if len(unique_dims) > 1:
+        # Build detailed error message showing each model's dimension
+        dim_details = []
+        for model_idx, dim in model_outputs:
+            param_count = model_param_counts[model_idx]
+            dim_details.append(
+                f"  models[{model_idx}]: output_dim={dim}, params={param_count:,}"
+            )
+        
+        raise ValueError(
+            f"all models must have the same output dimension for mutual learning.\n"
+            f"Found {len(unique_dims)} different output dimensions:\n" +
+            "\n".join(dim_details)
+        )
+    
+    # Return the validated output dimension
+    return model_outputs[0][1]

@@ -18,6 +18,7 @@ from pydml.utils.validation import (
     validate_positive_float,
     validate_string_choice,
     validate_temperature,
+    validate_model_compatibility,
 )
 
 
@@ -119,35 +120,9 @@ class DMLTrainer(BaseCollaborativeTrainer):
         if not all(isinstance(m, nn.Module) for m in models):
             raise TypeError("All models must be instances of torch.nn.Module")
         
-        # Validate output dimensions match (try common input shapes)
-        validation_successful = False
-        # Try various common input shapes: CIFAR, MNIST, flattened, and simple 1D
-        for input_shape in [(2, 3, 32, 32), (2, 1, 28, 28), (2, 784), (2, 10)]:
-            try:
-                with torch.no_grad():
-                    dummy_input = torch.randn(*input_shape).to(device)
-                    output_dims = [model(dummy_input.to(next(model.parameters()).device)).shape[-1] for model in models]
-                
-                if len(set(output_dims)) > 1:
-                    raise ValueError(
-                        f"All models must have the same output dimension. "
-                        f"Got dimensions: {output_dims}"
-                    )
-                validation_successful = True
-                break
-            except (RuntimeError, StopIteration, ValueError) as e:
-                if "same output dimension" in str(e):
-                    raise  # Re-raise dimension mismatch errors
-                continue  # Try next input shape
-        
-        # Only warn if all shapes failed
-        if not validation_successful:
-            import warnings
-            warnings.warn(
-                "Could not validate output dimensions with common input shapes. "
-                "Ensure all models have the same output dimension.",
-                UserWarning
-            )
+        # Validate model compatibility (output dimensions, parameters, etc.)
+        # This replaces the unreliable trial-and-error validation
+        validate_model_compatibility(models, device)
         
         super().__init__(
             models=models,
