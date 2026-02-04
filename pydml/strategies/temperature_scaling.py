@@ -72,7 +72,7 @@ class TemperatureScheduler(ABC):
         """Get current temperature."""
         return self.current_temp
     
-    def reset(self):
+    def reset(self) -> None:
         """Reset scheduler to initial state."""
         self.current_epoch = 0
         self.current_temp = self.config.initial_temp

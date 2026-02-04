@@ -36,14 +36,14 @@ class ExperimentLogger:
         
         print(f"Experiment logger initialized: {self.exp_dir}")
     
-    def log_config(self, config: Dict[str, Any]):
+    def log_config(self, config: Dict[str, Any]) -> None:
         """Log experiment configuration."""
         self.config = config
         config_path = os.path.join(self.exp_dir, 'config.json')
         with open(config_path, 'w') as f:
             json.dump(config, f, indent=2)
     
-    def log_metrics(self, epoch: int, metrics: Dict[str, float]):
+    def log_metrics(self, epoch: int, metrics: Dict[str, float]) -> None:
         """Log metrics for an epoch."""
         if 'epochs' not in self.metrics_history:
             self.metrics_history['epochs'] = []
@@ -55,25 +55,25 @@ class ExperimentLogger:
                 self.metrics_history[key] = []
             self.metrics_history[key].append(value)
     
-    def log_model(self, model: torch.nn.Module, name: str = 'model'):
+    def log_model(self, model: torch.nn.Module, name: str = 'model') -> None:
         """Save model checkpoint."""
         model_path = os.path.join(self.exp_dir, f'{name}.pt')
         torch.save(model.state_dict(), model_path)
         print(f"Model saved: {model_path}")
     
-    def log_text(self, text: str, filename: str = 'notes.txt'):
+    def log_text(self, text: str, filename: str = 'notes.txt') -> None:
         """Log text to a file."""
         text_path = os.path.join(self.exp_dir, filename)
         with open(text_path, 'a') as f:
             f.write(f"[{datetime.now()}] {text}\n")
     
-    def save_metrics(self):
+    def save_metrics(self) -> None:
         """Save all metrics to a JSON file."""
         metrics_path = os.path.join(self.exp_dir, 'metrics.json')
         with open(metrics_path, 'w') as f:
             json.dump(self.metrics_history, f, indent=2)
     
-    def finalize(self):
+    def finalize(self) -> None:
         """Finalize the experiment and save all data."""
         elapsed_time = time.time() - self.start_time
         
@@ -103,33 +103,33 @@ class ConsoleLogger:
     def __init__(self, verbose: bool = True):
         self.verbose = verbose
     
-    def info(self, message: str):
+    def info(self, message: str) -> None:
         """Log info message."""
         if self.verbose:
             print(f"[INFO] {message}")
     
-    def warning(self, message: str):
+    def warning(self, message: str) -> None:
         """Log warning message."""
         if self.verbose:
             print(f"[WARNING] {message}")
     
-    def error(self, message: str):
+    def error(self, message: str) -> None:
         """Log error message."""
         print(f"[ERROR] {message}")
     
-    def success(self, message: str):
+    def success(self, message: str) -> None:
         """Log success message."""
         if self.verbose:
             print(f"[SUCCESS] {message}")
     
-    def section(self, title: str, width: int = 60):
+    def section(self, title: str, width: int = 60) -> None:
         """Print a section header."""
         if self.verbose:
             print("\n" + "=" * width)
             print(title.center(width))
             print("=" * width)
     
-    def subsection(self, title: str, width: int = 60):
+    def subsection(self, title: str, width: int = 60) -> None:
         """Print a subsection header."""
         if self.verbose:
             print("\n" + "-" * width)

@@ -118,7 +118,7 @@ class ModelExporter:
         
         print(f"✓ Model exported successfully to {output_path}")
     
-    def _export_onnx(self, output_path: Path, dummy_input: torch.Tensor):
+    def _export_onnx(self, output_path: Path, dummy_input: torch.Tensor) -> None:
         """Export model to ONNX format."""
         try:
             torch.onnx.export(
@@ -139,7 +139,7 @@ class ModelExporter:
         except Exception as e:
             raise RuntimeError(f"ONNX export failed: {str(e)}")
     
-    def _verify_onnx(self, output_path: Path, dummy_input: torch.Tensor):
+    def _verify_onnx(self, output_path: Path, dummy_input: torch.Tensor) -> None:
         """Verify ONNX model can be loaded and produces correct output."""
         try:
             import onnx
@@ -170,7 +170,7 @@ class ModelExporter:
         except Exception as e:
             warnings.warn(f"ONNX verification failed: {str(e)}")
     
-    def _export_torchscript(self, output_path: Path, dummy_input: torch.Tensor):
+    def _export_torchscript(self, output_path: Path, dummy_input: torch.Tensor) -> None:
         """Export model to TorchScript format."""
         try:
             # Use tracing for export
@@ -195,7 +195,7 @@ class ModelExporter:
         except Exception as e:
             raise RuntimeError(f"TorchScript export failed: {str(e)}")
     
-    def _verify_torchscript(self, output_path: Path, dummy_input: torch.Tensor):
+    def _verify_torchscript(self, output_path: Path, dummy_input: torch.Tensor) -> None:
         """Verify TorchScript model can be loaded and produces correct output."""
         try:
             # Load traced model
@@ -214,7 +214,7 @@ class ModelExporter:
         except Exception as e:
             warnings.warn(f"TorchScript verification failed: {str(e)}")
     
-    def _export_state_dict(self, output_path: Path):
+    def _export_state_dict(self, output_path: Path) -> None:
         """Export model state dict (PyTorch native format)."""
         torch.save({
             'model_state_dict': self.model.state_dict(),

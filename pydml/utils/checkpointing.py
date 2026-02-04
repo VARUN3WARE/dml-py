@@ -124,7 +124,7 @@ class CheckpointManager:
         
         return str(filepath)
     
-    def _cleanup_checkpoints(self):
+    def _cleanup_checkpoints(self) -> None:
         """Remove old checkpoints, keeping only max_to_keep recent ones."""
         if len(self.checkpoints) <= self.max_to_keep:
             return

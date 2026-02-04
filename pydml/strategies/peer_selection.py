@@ -71,7 +71,7 @@ class PeerSelector(ABC):
         """
         pass
     
-    def update(self, epoch: int, metrics: Dict[int, float]):
+    def update(self, epoch: int, metrics: Dict[int, float]) -> None:
         """Update strategy state based on epoch and metrics."""
         self.current_epoch = epoch
         self.history['performance'].append(metrics.copy())

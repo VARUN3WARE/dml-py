@@ -15,27 +15,27 @@ class Callback(ABC):
     Callbacks can be used to execute custom code at different points during training.
     """
     
-    def on_train_begin(self, trainer: Any):
+    def on_train_begin(self, trainer: Any) -> None:
         """Called at the beginning of training."""
         pass
     
-    def on_train_end(self, trainer: Any):
+    def on_train_end(self, trainer: Any) -> None:
         """Called at the end of training."""
         pass
     
-    def on_epoch_begin(self, trainer: Any, epoch: int):
+    def on_epoch_begin(self, trainer: Any, epoch: int) -> None:
         """Called at the beginning of each epoch."""
         pass
     
-    def on_epoch_end(self, trainer: Any, epoch: int, metrics: Dict[str, float]):
+    def on_epoch_end(self, trainer: Any, epoch: int, metrics: Dict[str, float]) -> None:
         """Called at the end of each epoch."""
         pass
     
-    def on_batch_begin(self, trainer: Any, batch: int):
+    def on_batch_begin(self, trainer: Any, batch: int) -> None:
         """Called at the beginning of each batch."""
         pass
     
-    def on_batch_end(self, trainer: Any, batch: int, loss: float):
+    def on_batch_end(self, trainer: Any, batch: int, loss: float) -> None:
         """Called at the end of each batch."""
         pass
 
@@ -67,7 +67,7 @@ class EarlyStopping(Callback):
         self.wait = 0
         self.stopped_epoch = 0
     
-    def on_epoch_end(self, trainer: Any, epoch: int, metrics: Dict[str, float]):
+    def on_epoch_end(self, trainer: Any, epoch: int, metrics: Dict[str, float]) -> None:
         """Check if training should stop."""
         if self.monitor not in metrics:
             return
@@ -124,7 +124,7 @@ class ModelCheckpoint(Callback):
         self.best_value = float('inf') if mode == 'min' else float('-inf')
         self.best_epoch = None
     
-    def on_epoch_end(self, trainer: Any, epoch: int, metrics: Dict[str, float]):
+    def on_epoch_end(self, trainer: Any, epoch: int, metrics: Dict[str, float]) -> None:
         """Save checkpoint if conditions are met."""
         should_save = False
         is_best = False
@@ -171,7 +171,7 @@ class LearningRateLogger(Callback):
     Log learning rates during training.
     """
     
-    def on_epoch_begin(self, trainer: Any, epoch: int):
+    def on_epoch_begin(self, trainer: Any, epoch: int) -> None:
         """Log current learning rates."""
         lrs = [opt.param_groups[0]['lr'] for opt in trainer.optimizers]
         print(f"Learning rates: {lrs}")
@@ -189,7 +189,7 @@ class TensorBoardLogger(Callback):
         self.log_dir = log_dir
         self.writer = None
     
-    def on_train_begin(self, trainer: Any):
+    def on_train_begin(self, trainer: Any) -> None:
         """Initialize TensorBoard writer."""
         try:
             from torch.utils.tensorboard import SummaryWriter
@@ -198,7 +198,7 @@ class TensorBoardLogger(Callback):
         except ImportError:
             print("TensorBoard not available. Install with: pip install tensorboard")
     
-    def on_epoch_end(self, trainer: Any, epoch: int, metrics: Dict[str, float]):
+    def on_epoch_end(self, trainer: Any, epoch: int, metrics: Dict[str, float]) -> None:
         """Log metrics to TensorBoard."""
         if self.writer is None:
             return
@@ -206,7 +206,7 @@ class TensorBoardLogger(Callback):
         for name, value in metrics.items():
             self.writer.add_scalar(name, value, epoch)
     
-    def on_train_end(self, trainer: Any):
+    def on_train_end(self, trainer: Any) -> None:
         """Close TensorBoard writer."""
         if self.writer is not None:
             self.writer.close()

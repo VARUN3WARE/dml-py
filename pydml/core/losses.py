@@ -5,6 +5,7 @@ This module provides base classes and common loss functions used in collaborativ
 """
 
 from abc import ABC, abstractmethod
+from typing import List
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -181,18 +182,18 @@ class LossRegistry:
     }
     
     @classmethod
-    def register(cls, name: str, loss_class: type):
+    def register(cls, name: str, loss_class: type) -> None:
         """Register a new loss function."""
         cls._registry[name] = loss_class
     
     @classmethod
-    def get(cls, name: str, **kwargs):
+    def get(cls, name: str, **kwargs) -> nn.Module:
         """Get a loss function by name."""
         if name not in cls._registry:
             raise ValueError(f"Loss '{name}' not found in registry. Available: {list(cls._registry.keys())}")
         return cls._registry[name](**kwargs)
     
     @classmethod
-    def list_available(cls):
+    def list_available(cls) -> List[str]:
         """List all available loss functions."""
         return list(cls._registry.keys())
