@@ -186,11 +186,45 @@ class TensorBoardLogger(Callback):
     """
     
     def __init__(self, log_dir: str = 'runs'):
+        """
+        Initialize TensorBoard callback for real-time training visualization.
+        
+        Creates a TensorBoard callback that logs training metrics in real-time.
+        Metrics can be viewed in TensorBoard by running:
+        tensorboard --logdir=runs
+        
+        Args:
+            log_dir: Directory where TensorBoard logs will be saved (default: 'runs')
+                    Each training run creates a subdirectory with a timestamp
+                    
+        Example:
+            >>> from pydml.core.callbacks import TensorBoardCallback
+            >>> callback = TensorBoardCallback(log_dir='tensorboard_logs')
+            >>> trainer = DMLTrainer(models, callbacks=[callback])
+            >>> trainer.fit(train_loader, val_loader, epochs=100)
+            >>> # View in browser: tensorboard --logdir=tensorboard_logs
+            
+        Note:
+            Requires tensorboard package: pip install tensorboard
+            If tensorboard is not installed, the callback will print a warning
+            and training will continue without logging.
+        """
         self.log_dir = log_dir
         self.writer = None
     
     def on_train_begin(self, trainer: Any) -> None:
-        """Initialize TensorBoard writer."""
+        """
+        Initialize TensorBoard writer at the start of training.
+        
+        Creates a SummaryWriter that will log metrics to the specified directory.
+        If tensorboard is not installed, prints a helpful error message.
+        
+        Args:
+            trainer: The trainer instance (provides access to training state)
+            
+        Note:
+            This method is called automatically by the trainer when training starts.
+        """
         try:
             from torch.utils.tensorboard import SummaryWriter
             self.writer = SummaryWriter(self.log_dir)
@@ -199,7 +233,22 @@ class TensorBoardLogger(Callback):
             print("TensorBoard not available. Install with: pip install tensorboard")
     
     def on_epoch_end(self, trainer: Any, epoch: int, metrics: Dict[str, float]) -> None:
-        """Log metrics to TensorBoard."""
+        """
+        Log training metrics to TensorBoard at the end of each epoch.
+        
+        Records all metrics (loss, accuracy, learning rate, etc.) as scalar values
+        that can be visualized in TensorBoard's web interface.
+        
+        Args:
+            trainer: The trainer instance
+            epoch: Current epoch number
+            metrics: Dictionary of metric names to values, e.g.:
+                    {'train_loss': 0.45, 'val_acc': 85.3, 'learning_rate': 0.01}
+                    
+        Note:
+            This method is called automatically by the trainer at the end of each epoch.
+            All metrics in the dictionary will appear as separate graphs in TensorBoard.
+        """
         if self.writer is None:
             return
         
@@ -207,6 +256,17 @@ class TensorBoardLogger(Callback):
             self.writer.add_scalar(name, value, epoch)
     
     def on_train_end(self, trainer: Any) -> None:
-        """Close TensorBoard writer."""
+        """
+        Close TensorBoard writer and flush any remaining data.
+        
+        Ensures all logged data is written to disk before training ends.
+        
+        Args:
+            trainer: The trainer instance
+            
+        Note:
+            This method is called automatically by the trainer when training completes.
+            Always flush and close the writer to ensure all data is saved properly.
+        """
         if self.writer is not None:
             self.writer.close()

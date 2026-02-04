@@ -96,16 +96,35 @@ def set_random_state(state: dict):
     """
     Restore random state from a saved state dictionary.
     
-    Parameters
-    ----------
-    state : dict
-        Random state dictionary from get_random_state().
+    This function restores the random number generator states for Python's random
+    module, NumPy, PyTorch CPU, and PyTorch CUDA. Use this with get_random_state()
+    to save and restore the exact state of all random number generators.
+    
+    Args:
+        state: Random state dictionary obtained from get_random_state()
+              Must contain keys: 'python', 'numpy', 'torch'
+              May contain key: 'torch_cuda' if CUDA was available when saved
+              
+    Raises:
+        KeyError: If state dictionary is missing required keys
         
-    Examples
-    --------
-    >>> state = get_random_state()
-    >>> # Random operations here
-    >>> set_random_state(state)  # Back to saved state
+    Example:
+        >>> # Save state before random operations
+        >>> state = get_random_state()
+        >>> 
+        >>> # Perform some random operations
+        >>> data1 = torch.randn(100)
+        >>> 
+        >>> # Restore state
+        >>> set_random_state(state)
+        >>> 
+        >>> # Same random operations will produce identical results
+        >>> data2 = torch.randn(100)
+        >>> assert torch.allclose(data1, data2)  # True!
+        
+    Note:
+        This is useful for debugging and ensuring reproducibility of specific
+        code sections. For general reproducibility, use set_seed() instead.
     """
     random.setstate(state['python'])
     np.random.set_state(state['numpy'])

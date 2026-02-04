@@ -22,7 +22,26 @@ from pydml.utils.amp import AMPConfig, AMPManager
 
 # Detect Jupyter environment and import appropriate tqdm
 def _is_jupyter():
-    """Detect if running in a Jupyter notebook."""
+    """
+    Detect if code is running in a Jupyter notebook environment.
+    
+    This function checks the IPython environment to determine if the code is
+    running in a Jupyter notebook, Jupyter Lab, or a terminal. This is used
+    to select the appropriate progress bar display (notebook vs terminal).
+    
+    Returns:
+        bool: True if running in Jupyter notebook/lab, False otherwise
+        
+    Note:
+        This function is used internally to choose between tqdm.notebook.tqdm
+        (for Jupyter) and regular tqdm (for terminal). This ensures progress
+        bars display correctly in both environments.
+        
+    Example:
+        The function is used automatically when importing:
+        >>> # In Jupyter: uses tqdm.notebook.tqdm
+        >>> # In terminal: uses regular tqdm
+    """
     try:
         shell = get_ipython().__class__.__name__
         if shell == 'ZMQInteractiveShell':
