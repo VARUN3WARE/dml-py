@@ -6,7 +6,7 @@ This provides richer knowledge transfer through intermediate representations.
 """
 
 from dataclasses import dataclass
-from typing import List, Optional, Dict, Tuple
+from typing import List, Optional, Dict, Tuple, Any
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -53,26 +53,26 @@ class FeatureExtractor(nn.Module):
         if layer_names is not None:
             self._register_hooks()
     
-    def _get_hook(self, name):
+    def _get_hook(self, name) -> Any:
         """Create a hook function that stores the feature map."""
         def hook(module, input, output):
             self.features[name] = output
         return hook
     
-    def _register_hooks(self):
+    def _register_hooks(self) -> None:
         """Register forward hooks to extract features."""
         for name, module in self.model.named_modules():
             if name in self.layer_names:
                 hook = module.register_forward_hook(self._get_hook(name))
                 self.hooks.append(hook)
     
-    def forward(self, x):
+    def forward(self, x) -> Dict[str, torch.Tensor]:
         """Forward pass that returns both output and intermediate features."""
         self.features = {}
         output = self.model(x)
         return output, self.features
     
-    def remove_hooks(self):
+    def remove_hooks(self) -> None:
         """Remove all registered hooks."""
         for hook in self.hooks:
             hook.remove()
@@ -160,7 +160,7 @@ class FeatureDMLTrainer(BaseCollaborativeTrainer):
               f"feature_weight={self.config.feature_mimicry_weight}, "
               f"feature_loss={self.config.feature_loss_type}")
     
-    def _cosine_similarity_loss(self, features1, features2):
+    def _cosine_similarity_loss(self, features1, features2) -> torch.Tensor:
         """Compute cosine similarity loss (1 - cosine_similarity)."""
         features1_flat = features1.view(features1.size(0), -1)
         features2_flat = features2.view(features2.size(0), -1)
@@ -175,7 +175,7 @@ class FeatureDMLTrainer(BaseCollaborativeTrainer):
         # Return loss (1 - similarity)
         return 1 - cosine_sim
     
-    def _match_feature_dimensions(self, features1, features2):
+    def _match_feature_dimensions(self, features1, features2) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Match feature dimensions if they differ.
         

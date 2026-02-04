@@ -83,7 +83,7 @@ class DistributedManager:
         self.config = config
         self.is_initialized = False
     
-    def setup(self):
+    def setup(self) -> None:
         """Initialize distributed process group."""
         if self.config.world_size > 1 and not self.is_initialized:
             dist.init_process_group(
@@ -98,7 +98,7 @@ class DistributedManager:
             if torch.cuda.is_available():
                 torch.cuda.set_device(self.config.local_rank)
     
-    def cleanup(self):
+    def cleanup(self) -> None:
         """Destroy distributed process group."""
         if self.is_initialized:
             dist.destroy_process_group()
@@ -127,7 +127,7 @@ class DistributedManager:
             find_unused_parameters=self.config.find_unused_parameters
         )
     
-    def create_distributed_sampler(self, dataset, shuffle: bool = True):
+    def create_distributed_sampler(self, dataset, shuffle: bool = True) -> 'DistributedSampler':
         """
         Create DistributedSampler for dataset.
         
@@ -152,12 +152,12 @@ class DistributedManager:
         """Check if current process is the main process."""
         return self.config.rank == 0
     
-    def barrier(self):
+    def barrier(self) -> None:
         """Synchronize all processes."""
         if self.is_initialized:
             dist.barrier()
     
-    def all_reduce(self, tensor: torch.Tensor, op=dist.ReduceOp.SUM):
+    def all_reduce(self, tensor: torch.Tensor, op=dist.ReduceOp.SUM) -> torch.Tensor:
         """
         All-reduce operation across processes.
         

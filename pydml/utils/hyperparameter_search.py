@@ -118,13 +118,13 @@ class HyperparameterSearcher:
         best_result = self.results[best_idx]
         return best_result['config'], best_result['metric']
     
-    def save_results(self, output_path: str):
+    def save_results(self, output_path: str) -> None:
         """Save search results to JSON."""
         with open(output_path, 'w') as f:
             json.dump(self.results, f, indent=2)
         print(f"✓ Search results saved to {output_path}")
     
-    def plot_results(self, output_path: str):
+    def plot_results(self, output_path: str) -> None:
         """Plot search results."""
         import matplotlib.pyplot as plt
         

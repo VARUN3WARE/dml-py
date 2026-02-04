@@ -68,7 +68,7 @@ class LossLandscape:
         
         return total_loss / total_samples
     
-    def perturb_parameters(self, direction: List[torch.Tensor], alpha: float):
+    def perturb_parameters(self, direction: List[torch.Tensor], alpha: float) -> None:
         """
         Perturb model parameters along a direction.
         
@@ -79,7 +79,7 @@ class LossLandscape:
         for param, orig, d in zip(self.model.parameters(), self.original_params, direction):
             param.data = orig + alpha * d
     
-    def restore_parameters(self):
+    def restore_parameters(self) -> None:
         """Restore model to original parameters."""
         for param, orig in zip(self.model.parameters(), self.original_params):
             param.data = orig.clone()

@@ -197,7 +197,7 @@ class AutoBatchSizeReducer:
         """Get current batch size."""
         return self.current_batch_size
     
-    def reduce(self):
+    def reduce(self) -> int:
         """Reduce batch size by reduction factor."""
         new_size = max(
             self.min_batch_size,
@@ -214,7 +214,7 @@ class AutoBatchSizeReducer:
         """Check if batch size can be reduced further."""
         return self.current_batch_size >= self.min_batch_size
     
-    def reset(self):
+    def reset(self) -> None:
         """Reset to initial batch size."""
         self.current_batch_size = self.initial_batch_size
         self.attempts = 0
@@ -313,6 +313,6 @@ class MemoryMonitor:
         """Get peak memory usage in GB."""
         return self.peak_memory
     
-    def reset_peak(self):
+    def reset_peak(self) -> None:
         """Reset peak memory counter."""
         self.peak_memory = 0.0

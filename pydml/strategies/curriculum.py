@@ -53,7 +53,7 @@ class CurriculumSampler(Sampler):
         # Start with 30% of data, reach 100% by epoch 100
         return min(0.3 + (epoch * 0.007), 1.0)
     
-    def set_epoch(self, epoch: int):
+    def set_epoch(self, epoch: int) -> None:
         """Set the current epoch for curriculum scheduling."""
         self.current_epoch = epoch
     

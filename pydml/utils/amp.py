@@ -12,7 +12,7 @@ Supports:
 """
 
 import torch
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Any
 from contextlib import nullcontext
 
 
@@ -91,7 +91,7 @@ class AMPManager:
         else:
             self.scaler = None
     
-    def autocast(self):
+    def autocast(self) -> Any:
         """
         Return autocast context manager.
         
@@ -117,7 +117,7 @@ class AMPManager:
             return self.scaler.scale(loss)
         return loss
     
-    def step(self, optimizer: torch.optim.Optimizer):
+    def step(self, optimizer: torch.optim.Optimizer) -> None:
         """
         Perform optimizer step with gradient unscaling.
         
@@ -129,12 +129,12 @@ class AMPManager:
         else:
             optimizer.step()
     
-    def update(self):
+    def update(self) -> None:
         """Update gradient scaler state."""
         if self.scaler is not None:
             self.scaler.update()
     
-    def unscale_(self, optimizer: torch.optim.Optimizer):
+    def unscale_(self, optimizer: torch.optim.Optimizer) -> None:
         """
         Unscale gradients before gradient clipping or inspection.
         
@@ -150,7 +150,7 @@ class AMPManager:
             return {'scaler': self.scaler.state_dict()}
         return {}
     
-    def load_state_dict(self, state_dict: Dict):
+    def load_state_dict(self, state_dict: Dict) -> None:
         """Load state dict from checkpoint."""
         if self.scaler is not None and 'scaler' in state_dict:
             self.scaler.load_state_dict(state_dict['scaler'])
@@ -179,7 +179,7 @@ def apply_amp_to_trainer(trainer, amp_config: Optional[AMPConfig] = None):
     # Store original training step
     original_train_step = trainer.train_step
     
-    def amp_train_step(self, batch, batch_idx):
+    def amp_train_step(self, batch, batch_idx) -> torch.Tensor:
         """Training step with AMP support."""
         # Use autocast for forward pass
         with self.amp_manager.autocast():

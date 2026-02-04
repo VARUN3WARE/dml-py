@@ -249,12 +249,12 @@ class DMLTrainer(BaseCollaborativeTrainer):
         
         return ensemble_output
     
-    def eval(self):
+    def eval(self) -> None:
         """Set all models to evaluation mode."""
         for model in self.models:
             model.eval()
     
-    def train(self):
+    def train(self) -> None:
         """Set all models to training mode."""
         for model in self.models:
             model.train()

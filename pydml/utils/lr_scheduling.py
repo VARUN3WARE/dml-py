@@ -46,7 +46,7 @@ class WarmupConfig:
     warmup_start_lr: float = 1e-6
     warmup_method: str = 'linear'  # 'linear', 'exponential', 'cosine'
     
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Validate configuration."""
         if self.warmup_epochs < 0:
             raise ValueError(f"warmup_epochs must be non-negative, got {self.warmup_epochs}")
@@ -134,7 +134,7 @@ class SchedulerConfig:
     power: float = 1.0
     final_lr: float = 0.0
     
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Convert string to enum if needed."""
         if isinstance(self.scheduler_type, str):
             self.scheduler_type = SchedulerType(self.scheduler_type)

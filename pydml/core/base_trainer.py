@@ -366,7 +366,7 @@ class BaseCollaborativeTrainer(ABC):
         
         return self.history
     
-    def _validate_schedulers(self):
+    def _validate_schedulers(self) -> None:
         """Validate that schedulers are properly configured."""
         if len(self.schedulers) != self.num_models:
             raise ValueError(
@@ -392,7 +392,7 @@ class BaseCollaborativeTrainer(ABC):
         """
         return [group['lr'] for opt in self.optimizers for group in opt.param_groups]
     
-    def save_checkpoint(self, path: str):
+    def save_checkpoint(self, path: str) -> None:
         """Save checkpoint of all models, optimizers, schedulers, and AMP state."""
         checkpoint = {
             'epoch': self.current_epoch,
@@ -405,7 +405,7 @@ class BaseCollaborativeTrainer(ABC):
         }
         torch.save(checkpoint, path)
     
-    def load_checkpoint(self, path: str):
+    def load_checkpoint(self, path: str) -> None:
         """Load checkpoint of all models, optimizers, schedulers, and AMP state."""
         checkpoint = torch.load(path, map_location=self.device, weights_only=False)
         self.current_epoch = checkpoint['epoch']

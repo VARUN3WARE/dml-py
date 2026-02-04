@@ -227,7 +227,7 @@ class ConfidenceWeightedDML(BaseCollaborativeTrainer):
         
         return losses
     
-    def adapt_threshold(self, epoch: int, total_epochs: int):
+    def adapt_threshold(self, epoch: int, total_epochs: int) -> None:
         """
         Adaptively adjust confidence threshold during training.
         
