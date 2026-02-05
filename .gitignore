@@ -153,5 +153,6 @@ checkpoints/
 .DS_Store
 Thumbs.db
 
-# Project-specific issue tracking (local only)
+# Project-specific tracking (local only)
 ISSUES.md
+timeline/
