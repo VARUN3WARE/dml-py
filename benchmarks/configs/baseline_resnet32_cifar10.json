@@ -23,5 +23,5 @@
     ],
     "gamma": 0.2
   },
-  "notes": "Single ResNet32 baseline for CIFAR-10"
+  "notes": ""
 }
