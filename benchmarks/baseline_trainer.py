@@ -228,11 +228,9 @@ class BaselineTrainer:
             >>> results = trainer.train()
             >>> print(f"Best accuracy: {results['best_val_acc']:.2%}")
         """
-        print(f"\n{'='*60}")
-        print(f"Starting training: {self.config.name}")
-        print(f"{'='*60}")
+        print(f"\nStarting training: {self.config.name}")
         print(self.config)
-        print(f"{'='*60}\n")
+        print()
         
         for epoch in range(1, self.config.epochs + 1):
             # Train
@@ -265,11 +263,9 @@ class BaselineTrainer:
         self.logger.save()
         
         # Print summary
-        print(f"\n{'='*60}")
-        print("Training Complete!")
-        print(f"{'='*60}")
+        print("\nTraining complete")
         print(self.logger)
-        print(f"{'='*60}\n")
+        print()
         
         return self.logger.get_summary()
         

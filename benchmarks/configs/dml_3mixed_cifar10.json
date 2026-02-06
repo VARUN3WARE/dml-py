@@ -1,0 +1,27 @@
+{
+  "name": "dml_3mixed_cifar10",
+  "dataset": "cifar10",
+  "model_type": "mixed",
+  "num_models": 3,
+  "batch_size": 128,
+  "epochs": 200,
+  "learning_rate": 0.1,
+  "weight_decay": 0.0005,
+  "momentum": 0.9,
+  "temperature": 3.0,
+  "seed": 42,
+  "device": "cuda",
+  "num_workers": 4,
+  "use_augmentation": true,
+  "optimizer": "sgd",
+  "scheduler": "multistep",
+  "scheduler_params": {
+    "milestones": [
+      60,
+      120,
+      160
+    ],
+    "gamma": 0.2
+  },
+  "notes": "DML with 3 mixed models (ResNet32, MobileNet, WRN) on CIFAR-10"
+}

@@ -1,0 +1,38 @@
+{
+  "experiment_name": "test_trainer",
+  "timestamp": "2026-02-06T13:36:48.873414",
+  "total_epochs": 2,
+  "best_val_acc": 1.0,
+  "best_epoch": 1,
+  "total_time_seconds": 0.679205,
+  "metrics": {
+    "epoch": [
+      1,
+      2
+    ],
+    "train_loss": [
+      2.6107500791549683,
+      0.04007963323965669
+    ],
+    "train_acc": [
+      0.0625,
+      1.0
+    ],
+    "val_loss": [
+      0.10701970383524895,
+      0.00012516842252807692
+    ],
+    "val_acc": [
+      1.0,
+      1.0
+    ],
+    "learning_rate": [
+      0.01,
+      0.01
+    ],
+    "time_elapsed": [
+      0.676465,
+      0.679205
+    ]
+  }
+}

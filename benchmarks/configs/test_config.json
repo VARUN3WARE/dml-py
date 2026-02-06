@@ -1,0 +1,27 @@
+{
+  "name": "test_experiment",
+  "dataset": "cifar10",
+  "model_type": "simple",
+  "num_models": 1,
+  "batch_size": 32,
+  "epochs": 2,
+  "learning_rate": 0.1,
+  "weight_decay": 0.0005,
+  "momentum": 0.9,
+  "temperature": 3.0,
+  "seed": 42,
+  "device": "cuda",
+  "num_workers": 4,
+  "use_augmentation": true,
+  "optimizer": "sgd",
+  "scheduler": "multistep",
+  "scheduler_params": {
+    "milestones": [
+      60,
+      120,
+      160
+    ],
+    "gamma": 0.2
+  },
+  "notes": ""
+}
