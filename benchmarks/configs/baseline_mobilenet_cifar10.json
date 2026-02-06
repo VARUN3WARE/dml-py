@@ -23,5 +23,5 @@
     ],
     "gamma": 0.2
   },
-  "notes": "Single MobileNet baseline for CIFAR-10"
+  "notes": ""
 }
