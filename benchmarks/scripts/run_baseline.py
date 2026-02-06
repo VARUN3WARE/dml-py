@@ -17,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import torch
 from pydml.models.cifar import resnet32, mobilenet, wrn
-from pydml.utils.reproducibility import set_random_state
+from pydml.utils.reproducibility import set_seed
 from benchmarks import ExperimentConfig, BaselineTrainer
 from benchmarks.data_utils import get_cifar10_loaders, get_dataset_info
 
@@ -67,7 +67,7 @@ def run_experiment(config: ExperimentConfig) -> dict:
     print(f"Dataset: {config.dataset}")
     
     # Set random seed for reproducibility
-    set_random_state(config.seed)
+    set_seed(config.seed)
     
     # Get dataset info
     dataset_info = get_dataset_info(config.dataset)
