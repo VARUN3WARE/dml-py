@@ -16,7 +16,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import torch
-from pydml.models.cifar import resnet32, mobilenet, wrn
+from pydml.models.cifar import resnet32, mobilenet_v2, wrn_28_10
 from pydml.utils.reproducibility import set_seed
 from benchmarks import ExperimentConfig, BaselineTrainer
 from benchmarks.data_utils import get_cifar10_loaders, get_dataset_info
@@ -38,16 +38,10 @@ def get_model(model_type: str, num_classes: int) -> torch.nn.Module:
     if model_type == 'resnet32':
         return resnet32(num_classes=num_classes)
     elif model_type == 'mobilenet':
-        return mobilenet(num_classes=num_classes)
+        return mobilenet_v2(num_classes=num_classes)
     elif model_type.startswith('wrn'):
-        # Parse WRN-depth-width format
-        if '-' in model_type:
-            parts = model_type.split('-')
-            depth = int(parts[1])
-            width = int(parts[2])
-        else:
-            depth, width = 28, 2
-        return wrn(depth=depth, width=width, num_classes=num_classes)
+        # WRN-28-10 is the standard CIFAR configuration
+        return wrn_28_10(num_classes=num_classes)
     else:
         raise ValueError(f"unknown model type: {model_type}")
 
