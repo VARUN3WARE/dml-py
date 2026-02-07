@@ -37,12 +37,22 @@ def create_models(model_type: str, num_models: int, num_classes: int):
         'wrn': lambda: wrn_28_10(num_classes=num_classes),
     }
     
-    if model_type not in model_factory:
+    # Handle mixed architecture case
+    if model_type == 'mixed':
+        # Create one of each architecture
+        model_types = ['resnet32', 'mobilenet', 'wrn']
+        for i in range(num_models):
+            model_name = model_types[i % len(model_types)]
+            model = model_factory[model_name]()
+            models.append(model)
+            print(f"  Model {i+1}: {model_name}")
+    elif model_type in model_factory:
+        # Create multiple of same type
+        for i in range(num_models):
+            model = model_factory[model_type]()
+            models.append(model)
+    else:
         raise ValueError(f"Unknown model type: {model_type}")
-    
-    for i in range(num_models):
-        model = model_factory[model_type]()
-        models.append(model)
     
     return models
 
