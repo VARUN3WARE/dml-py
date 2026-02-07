@@ -1,7 +1,7 @@
 {
   "name": "baseline_wrn_cifar10",
   "dataset": "cifar10",
-  "model_type": "wrn-28-2",
+  "model_type": "wrn",
   "num_models": 1,
   "batch_size": 128,
   "epochs": 200,
@@ -23,5 +23,5 @@
     ],
     "gamma": 0.2
   },
-  "notes": "Single WideResNet-28-2 baseline for CIFAR-10"
+  "notes": ""
 }
