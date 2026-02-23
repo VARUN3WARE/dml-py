@@ -131,25 +131,25 @@ class TestWideResNetValidation:
     
     def test_valid_depth_10_succeeds(self):
         """Test that depth=10 works."""
-        # (10 - 4) % 6 = 6 % 6 = 0 ✓
+        # (10 - 4) % 6 = 6 % 6 = 0 
         model = WideResNet(depth=10, num_classes=10)
         assert model is not None
     
     def test_valid_depth_16_succeeds(self):
         """Test that depth=16 works."""
-        # (16 - 4) % 6 = 12 % 6 = 0 ✓
+        # (16 - 4) % 6 = 12 % 6 = 0 
         model = WideResNet(depth=16, num_classes=10)
         assert model is not None
     
     def test_valid_depth_28_succeeds(self):
         """Test that depth=28 (default) works."""
-        # (28 - 4) % 6 = 24 % 6 = 0 ✓
+        # (28 - 4) % 6 = 24 % 6 = 0 
         model = WideResNet(depth=28, num_classes=10)
         assert model is not None
     
     def test_valid_depth_40_succeeds(self):
         """Test that depth=40 works."""
-        # (40 - 4) % 6 = 36 % 6 = 0 ✓
+        # (40 - 4) % 6 = 36 % 6 = 0 
         model = WideResNet(depth=40, num_classes=10)
         assert model is not None
 

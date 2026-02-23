@@ -15,15 +15,15 @@ print("=" * 60)
 
 # Force CPU to avoid GPU memory issues
 device = 'cpu'
-print(f"\n✓ Using device: {device}")
+print(f"\n Using device: {device}")
 
 # Test 1: Basic model creation
 print("\n[Test 1] Creating models...")
 try:
     models = [resnet32(num_classes=10) for _ in range(2)]
-    print(f"✓ Created {len(models)} ResNet32 models")
+    print(f" Created {len(models)} ResNet32 models")
 except Exception as e:
-    print(f"✗ Failed: {e}")
+    print(f" Failed: {e}")
     exit(1)
 
 # Test 2: DML trainer creation
@@ -31,11 +31,11 @@ print("\n[Test 2] Creating DML trainer...")
 try:
     config = DMLConfig(temperature=3.0)
     trainer = DMLTrainer(models, config=config, device=device)
-    print(f"✓ DML Trainer initialized")
+    print(f" DML Trainer initialized")
     print(f"  - Temperature: {config.temperature}")
     print(f"  - Models: {trainer.num_models}")
 except Exception as e:
-    print(f"✗ Failed: {e}")
+    print(f" Failed: {e}")
     exit(1)
 
 # Test 3: Forward pass with tiny batch
@@ -51,9 +51,9 @@ try:
             output = model(x)
             assert output.shape == (batch_size, 10), f"Wrong shape: {output.shape}"
     
-    print(f"✓ Forward pass works (batch_size={batch_size})")
+    print(f" Forward pass works (batch_size={batch_size})")
 except Exception as e:
-    print(f"✗ Failed: {e}")
+    print(f" Failed: {e}")
     exit(1)
 
 # Test 4: Loss computation
@@ -67,11 +67,11 @@ try:
         assert f'model_{i}' in losses, f"Missing loss for model_{i}"
         assert not torch.isnan(losses[f'model_{i}']), "Loss is NaN"
     
-    print(f"✓ Loss computation works")
+    print(f" Loss computation works")
     print(f"  - Model 0 loss: {losses['model_0'].item():.4f}")
     print(f"  - Model 1 loss: {losses['model_1'].item():.4f}")
 except Exception as e:
-    print(f"✗ Failed: {e}")
+    print(f" Failed: {e}")
     exit(1)
 
 # Test 5: Single training step (very small)
@@ -98,9 +98,9 @@ try:
         trainer.optimizers[0].step()
         break  # Only one batch
     
-    print(f"✓ Training step works")
+    print(f" Training step works")
 except Exception as e:
-    print(f"✗ Failed: {e}")
+    print(f" Failed: {e}")
     exit(1)
 
 # Test 6: Model evaluation
@@ -118,9 +118,9 @@ try:
             correct += predicted.eq(targets).sum().item()
     
     acc = 100.0 * correct / total
-    print(f"✓ Evaluation works (accuracy: {acc:.2f}%)")
+    print(f" Evaluation works (accuracy: {acc:.2f}%)")
 except Exception as e:
-    print(f"✗ Failed: {e}")
+    print(f" Failed: {e}")
     exit(1)
 
 # Test 7: Checkpoint save/load
@@ -136,18 +136,18 @@ try:
         
         # Load it back
         trainer.load_checkpoint(checkpoint_path)
-        print(f"✓ Checkpoint save/load works")
+        print(f" Checkpoint save/load works")
 except Exception as e:
-    print(f"✗ Failed: {e}")
+    print(f" Failed: {e}")
     exit(1)
 
 # Summary
 print("\n" + "=" * 60)
-print("✅ ALL TESTS PASSED!")
+print(" ALL TESTS PASSED!")
 print("=" * 60)
-print("\n✓ DML-PY is working correctly")
-print("✓ All core functionality verified")
-print("✓ Memory usage kept minimal (CPU only, small batches)")
+print("\n DML-PY is working correctly")
+print(" All core functionality verified")
+print(" Memory usage kept minimal (CPU only, small batches)")
 print("\nYou can now:")
 print("  1. Run examples with: python examples/quick_start.py")
 print("  2. Run full tests with: pytest tests/")

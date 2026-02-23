@@ -125,7 +125,7 @@ def main():
             correct += predicted.eq(targets).sum().item()
     
     teacher_acc = 100. * correct / total
-    print(f"\n✓ Teacher training complete! Accuracy: {teacher_acc:.2f}%")
+    print(f"\n Teacher training complete! Accuracy: {teacher_acc:.2f}%")
     print("-" * 70)
     
     # Approach 1: Single Student with Standard Distillation
@@ -147,7 +147,7 @@ def main():
     )
     
     single_acc = single_history['val_acc'][-1]
-    print(f"\n✓ Single student accuracy: {single_acc:.2f}%")
+    print(f"\n Single student accuracy: {single_acc:.2f}%")
     print("-" * 70)
     
     # Approach 2: Multiple Students with DML (no teacher)
@@ -172,7 +172,7 @@ def main():
     )
     
     dml_acc = dml_history['val_acc'][-1]
-    print(f"\n✓ DML average accuracy: {dml_acc:.2f}%")
+    print(f"\n DML average accuracy: {dml_acc:.2f}%")
     print("-" * 70)
     
     # Approach 3: Co-Distillation (teacher + mutual learning)
@@ -206,7 +206,7 @@ def main():
     )
     
     codistill_acc = codistill_history['val_acc'][-1]
-    print(f"\n✓ Co-distillation average accuracy: {codistill_acc:.2f}%")
+    print(f"\n Co-distillation average accuracy: {codistill_acc:.2f}%")
     print("-" * 70)
     
     # Compare all approaches
@@ -230,7 +230,7 @@ def main():
     best_acc = max(single_acc, dml_acc, codistill_acc)
     
     if best_acc == codistill_acc and codistill_acc > single_acc:
-        print("\n  ✓ Co-distillation is the winner!")
+        print("\n   Co-distillation is the winner!")
         print("    Best of both worlds: teacher guidance + peer diversity")
     elif best_acc == single_acc:
         print("\n  Single student performs best")

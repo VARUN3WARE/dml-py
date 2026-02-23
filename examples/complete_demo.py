@@ -187,13 +187,13 @@ def main():
     
     print("\nKey Insights:")
     if dml_acc > baseline_acc:
-        print(f"  ✓ DML improved accuracy by {dml_acc - baseline_acc:.2f}%")
+        print(f"   DML improved accuracy by {dml_acc - baseline_acc:.2f}%")
     else:
-        print(f"  ⚠ DML accuracy similar to baseline (may need more epochs)")
+        print(f"   DML accuracy similar to baseline (may need more epochs)")
     
     time_ratio = dml_time / baseline_time
-    print(f"  ✓ Training time overhead: {(time_ratio - 1)*100:.1f}%")
-    print(f"  ✓ You get {len(dml_trainer.models)} trained models instead of 1")
+    print(f"   Training time overhead: {(time_ratio - 1)*100:.1f}%")
+    print(f"   You get {len(dml_trainer.models)} trained models instead of 1")
 
 
 if __name__ == '__main__':

@@ -31,7 +31,7 @@ def example_1_optimizer_count_validation():
     models = [resnet32(num_classes=10) for _ in range(3)]
     
     # Try to create trainer with wrong number of optimizers
-    print("\n✗ Attempting to create DMLTrainer with 2 optimizers for 3 models...")
+    print("\n Attempting to create DMLTrainer with 2 optimizers for 3 models...")
     try:
         optimizers = [
             torch.optim.SGD(models[0].parameters(), lr=0.1),
@@ -41,11 +41,11 @@ def example_1_optimizer_count_validation():
         trainer = DMLTrainer(models, optimizers=optimizers)
         print("ERROR: This should have failed!")
     except ValueError as e:
-        print(f"✓ Caught ValueError as expected:")
+        print(f" Caught ValueError as expected:")
         print(f"  {e}")
     
     # Now create with correct number
-    print("\n✓ Creating DMLTrainer with correct number of optimizers...")
+    print("\n Creating DMLTrainer with correct number of optimizers...")
     optimizers = [
         torch.optim.SGD(model.parameters(), lr=0.1)
         for model in models
@@ -64,17 +64,17 @@ def example_2_mobilenet_stride_validation():
     invalid_strides = [0, 3, 4, -1]
     
     for stride in invalid_strides:
-        print(f"\n✗ Attempting to create InvertedResidual with stride={stride}...")
+        print(f"\n Attempting to create InvertedResidual with stride={stride}...")
         try:
             block = InvertedResidual(inp=32, oup=64, stride=stride, expand_ratio=6)
             print("ERROR: This should have failed!")
         except ValueError as e:
-            print(f"✓ Caught ValueError as expected:")
+            print(f" Caught ValueError as expected:")
             print(f"  {e}")
     
     # Now create with valid strides
     valid_strides = [1, 2]
-    print(f"\n✓ Creating InvertedResidual with valid strides {valid_strides}...")
+    print(f"\n Creating InvertedResidual with valid strides {valid_strides}...")
     for stride in valid_strides:
         block = InvertedResidual(inp=32, oup=64, stride=stride, expand_ratio=6)
         print(f"  Success! Block created with stride={stride}")
@@ -90,20 +90,20 @@ def example_3_wrn_depth_validation():
     invalid_depths = [5, 11, 27, 29]
     
     for depth in invalid_depths:
-        print(f"\n✗ Attempting to create WideResNet with depth={depth}...")
+        print(f"\n Attempting to create WideResNet with depth={depth}...")
         print(f"  Checking: (depth - 4) % 6 == 0 => ({depth} - 4) % 6 = {(depth - 4) % 6}")
         try:
             model = WideResNet(depth=depth, num_classes=10)
             print("ERROR: This should have failed!")
         except ValueError as e:
-            print(f"✓ Caught ValueError as expected:")
+            print(f" Caught ValueError as expected:")
             print(f"  {e}")
     
     # Now create with valid depths
     valid_depths = [10, 16, 22, 28, 40]
-    print(f"\n✓ Creating WideResNet with valid depths...")
+    print(f"\n Creating WideResNet with valid depths...")
     for depth in valid_depths:
-        print(f"  depth={depth}: (depth - 4) % 6 = {(depth - 4) % 6} ✓")
+        print(f"  depth={depth}: (depth - 4) % 6 = {(depth - 4) % 6} ")
         model = WideResNet(depth=depth, num_classes=10)
         print(f"    Success! Model created")
 
@@ -125,9 +125,9 @@ def example_4_optimization_flag_resistance():
     # Check if we're running with optimization
     import sys
     if __debug__:
-        print("\n✓ Currently running in DEBUG mode (asserts enabled)")
+        print("\n Currently running in DEBUG mode (asserts enabled)")
     else:
-        print("\n⚠️  Currently running in OPTIMIZED mode (asserts disabled)")
+        print("\n  Currently running in OPTIMIZED mode (asserts disabled)")
         print("   But validations still work because they use proper exceptions!")
     
     # Demonstrate that validation works
@@ -138,7 +138,7 @@ def example_4_optimization_flag_resistance():
         trainer = DMLTrainer(models, optimizers=optimizers)
         print("ERROR: Validation was bypassed!")
     except ValueError:
-        print("✓ Validation works correctly - ValueError raised as expected")
+        print(" Validation works correctly - ValueError raised as expected")
 
 
 def example_5_informative_error_messages():
@@ -157,7 +157,7 @@ def example_5_informative_error_messages():
         trainer = DMLTrainer(models, optimizers=optimizers)
     except ValueError as e:
         print(f"   Message: {e}")
-        print("   ✓ Includes actual counts")
+        print("    Includes actual counts")
     
     # Stride error
     print("\n2. Invalid stride:")
@@ -165,7 +165,7 @@ def example_5_informative_error_messages():
         block = InvertedResidual(inp=32, oup=64, stride=5, expand_ratio=6)
     except ValueError as e:
         print(f"   Message: {e}")
-        print("   ✓ Includes invalid value")
+        print("    Includes invalid value")
     
     # Depth error
     print("\n3. Invalid depth:")
@@ -173,7 +173,7 @@ def example_5_informative_error_messages():
         model = WideResNet(depth=29, num_classes=10)
     except ValueError as e:
         print(f"   Message: {e}")
-        print("   ✓ Includes constraint and actual value")
+        print("    Includes constraint and actual value")
 
 
 if __name__ == "__main__":
@@ -193,9 +193,9 @@ if __name__ == "__main__":
     print("All Examples Completed Successfully!")
     print("=" * 80)
     print("\nKey Takeaways:")
-    print("  ✓ All validations use ValueError, not assert statements")
-    print("  ✓ Validations cannot be bypassed by python -O or -OO flags")
-    print("  ✓ Error messages are informative and include actual values")
-    print("  ✓ Invalid configurations are caught immediately")
-    print("  ✓ Production code is safe from silent failures")
+    print("   All validations use ValueError, not assert statements")
+    print("   Validations cannot be bypassed by python -O or -OO flags")
+    print("   Error messages are informative and include actual values")
+    print("   Invalid configurations are caught immediately")
+    print("   Production code is safe from silent failures")
     print("\n")

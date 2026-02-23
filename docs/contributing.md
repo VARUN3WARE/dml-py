@@ -272,4 +272,4 @@ Feel free to:
 - Start a discussion
 - Reach out to maintainers
 
-Thank you for contributing to PyDML! 🎉
+Thank you for contributing to PyDML! 

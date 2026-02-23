@@ -10,10 +10,10 @@
 
 **pytorch-dml** is a production-ready library for collaborative neural network training, incorporating Deep Mutual Learning (DML) and related research advances.
 
-> 🎉 **Now on PyPI!** Install with `pip install pytorch-dml` - Production-ready with 295 tests passing  
-> 📚 **[Read the full documentation →](docs/README.md)** | [API Reference](docs/api/core.md) | [Tutorials](docs/tutorials/basic_dml.md)
+> **Now on PyPI!** Install with `pip install pytorch-dml` - Production-ready with 295 tests passing  
+>  **[Read the full documentation →](docs/README.md)** | [API Reference](docs/api/core.md) | [Tutorials](docs/tutorials/basic_dml.md)
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -70,22 +70,22 @@ test_metrics = trainer.evaluate(test_loader)
 print(f"Test Accuracy: {test_metrics['val_acc']:.2f}%")
 ```
 
-## ✨ Features
+## Features
 
-- 🤝 **Deep Mutual Learning**: Train multiple networks collaboratively
-- 🎲 **Reproducibility**: Built-in seed management for consistent results
-- 🛡️ **CUDA OOM Handling**: Automatic out-of-memory error recovery and monitoring
-- ⚡ **Mixed Precision Training**: Automatic FP16/BF16 support for faster training
+- **Deep Mutual Learning**: Train multiple networks collaboratively
+- **Reproducibility**: Built-in seed management for consistent results
+- **CUDA OOM Handling**: Automatic out-of-memory error recovery and monitoring
+- **Mixed Precision Training**: Automatic FP16/BF16 support for faster training
 - � **Checkpoint Management**: Auto-save, resume training, best model tracking
-- 📉 **LR Scheduling**: Warmup, cosine annealing, pre-configured recipes for optimal convergence
-- 📊 **Multiple Architectures**: ResNet, MobileNet, WideResNet for CIFAR
-- 🧩 **Modular Design**: Easy to extend and customize
-- 🔬 **Research-Ready**: Built for experimentation
-- 📈 **Analysis Tools**: Robustness testing, metrics, visualization
-- ✅ **Well-Tested**: 40+ unit tests, all passing
-- 📚 **Well-Documented**: Examples and inline documentation
+- **LR Scheduling**: Warmup, cosine annealing, pre-configured recipes for optimal convergence
+- **Multiple Architectures**: ResNet, MobileNet, WideResNet for CIFAR
+- **Modular Design**: Easy to extend and customize
+- **Research-Ready**: Built for experimentation
+- **Analysis Tools**: Robustness testing, metrics, visualization
+- **Well-Tested**: 40+ unit tests, all passing
+- **Well-Documented**: Examples and inline documentation
 
-## 📦 Installation
+## Installation
 
 ### From Source
 
@@ -116,9 +116,9 @@ pip install pytorch-dml
 - numpy >= 1.21.0
 - tqdm >= 4.65.0
 
-## 🎯 What's Implemented
+## What's Implemented
 
-### ✅ Core Components
+### Core Components
 
 - [x] BaseCollaborativeTrainer with full training loop
 - [x] DML Trainer (Algorithm 1 from paper)
@@ -128,26 +128,26 @@ pip install pytorch-dml
 - [x] Loss functions (CE, KL, DML, Attention Transfer)
 - [x] Callbacks (EarlyStopping, ModelCheckpoint, TensorBoard)
 
-### ✅ Model Zoo
+### Model Zoo
 
 - [x] ResNet32, ResNet110
 - [x] MobileNetV2
 - [x] Wide ResNet 28-10
 
-### ✅ Advanced Features
+### Advanced Features
 
 - [x] Curriculum Learning strategies
 - [x] Visualization tools (6 plot types)
 - [x] Robustness analysis
 - [x] Attention transfer mechanisms
 
-### ✅ Utilities
+### Utilities
 
 - [x] CIFAR-10/100 data loaders
 - [x] Metrics (accuracy, ECE, entropy, diversity)
 - [x] Experiment logging
 
-### ✅ Examples
+### Examples
 
 - [x] 17 working demo scripts
 - [x] Quick start guide
@@ -155,7 +155,7 @@ pip install pytorch-dml
 - [x] Advanced training examples
 - [x] Checkpoint/resume workflow
 
-### 💾 Checkpoint Management
+### Checkpoint Management
 
 Save and resume training seamlessly:
 
@@ -194,7 +194,7 @@ print(f"Loaded best model from epoch {best_epoch}")
 
 See [examples/checkpoint_resume_demo.py](examples/checkpoint_resume_demo.py) for 7 complete examples.
 
-### 📉 Learning Rate Scheduling
+### Learning Rate Scheduling
 
 Optimize convergence with advanced LR scheduling including warmup and pre-configured recipes:
 
@@ -240,15 +240,15 @@ schedulers = create_schedulers_from_config(optimizers, config)
 
 **Benefits:**
 
-- ✅ Improved convergence and higher final accuracy
-- ✅ Warmup prevents unstable early training
-- ✅ Pre-configured recipes for common scenarios
-- ✅ Easy configuration with SchedulerConfig
-- ✅ Compatible with all PyTorch optimizers
+- Improved convergence and higher final accuracy
+- Warmup prevents unstable early training
+- Pre-configured recipes for common scenarios
+- Easy configuration with SchedulerConfig
+- Compatible with all PyTorch optimizers
 
 See [examples/lr_scheduling_demo.py](examples/lr_scheduling_demo.py) for 8 comprehensive examples and best practices.
 
-### 📊 Training Monitoring & Overfitting Detection
+### Training Monitoring & Overfitting Detection
 
 Automatically detect overfitting, track training progress, and get actionable recommendations:
 
@@ -277,7 +277,7 @@ for epoch in range(1, 201):
 
         # Get actionable suggestions
         if report.status == OverfittingStatus.SEVERE_OVERFITTING:
-            print("⚠️ Severe overfitting detected!")
+            print(" Severe overfitting detected!")
             for rec in report.recommendations:
                 print(f"  • {rec}")
 
@@ -296,13 +296,13 @@ print(monitor.get_summary())
 
 **Key Features:**
 
-- ✅ **Automatic Overfitting Detection:** Monitors generalization gap (train vs val accuracy)
-- ✅ **Severity Classification:** NO_OVERFITTING, MILD, MODERATE, SEVERE, UNDERFITTING
-- ✅ **Actionable Recommendations:** Specific suggestions based on training state
-- ✅ **Trend Analysis:** Track if metrics are improving, degrading, or stable
-- ✅ **Early Stopping:** Automatic detection with configurable patience
-- ✅ **Best Model Tracking:** Find optimal checkpoint for deployment
-- ✅ **Comprehensive Reports:** Detailed analysis with confidence scores
+- **Automatic Overfitting Detection:** Monitors generalization gap (train vs val accuracy)
+- **Severity Classification:** NO_OVERFITTING, MILD, MODERATE, SEVERE, UNDERFITTING
+- **Actionable Recommendations:** Specific suggestions based on training state
+- **Trend Analysis:** Track if metrics are improving, degrading, or stable
+- **Early Stopping:** Automatic detection with configurable patience
+- **Best Model Tracking:** Find optimal checkpoint for deployment
+- **Comprehensive Reports:** Detailed analysis with confidence scores
 
 **Example Output:**
 
@@ -328,7 +328,7 @@ Recommendations:
 
 See [examples/training_monitor_demo.py](examples/training_monitor_demo.py) for 7 comprehensive examples and best practices.
 
-### 🛡️ Production-Safe Validation
+### Production-Safe Validation
 
 All input validation uses proper exceptions (ValueError) instead of assert statements, ensuring that validation logic cannot be bypassed when Python is run with optimization flags (`-O` or `-OO`):
 
@@ -349,9 +349,9 @@ except ValueError as e:
 
 **Protected validations:**
 
-- ✅ Optimizer count must match model count
-- ✅ MobileNet stride must be 1 or 2
-- ✅ WideResNet depth must satisfy `(depth - 4) % 6 == 0`
+- Optimizer count must match model count
+- MobileNet stride must be 1 or 2
+- WideResNet depth must satisfy `(depth - 4) % 6 == 0`
 
 **Why this matters:**
 
@@ -361,7 +361,7 @@ except ValueError as e:
 
 See [examples/validation_demo.py](examples/validation_demo.py) for interactive demonstration.
 
-### ✅ Comprehensive Input Validation
+### Comprehensive Input Validation
 
 PyDML includes extensive input validation to catch errors early and provide clear, actionable error messages:
 
@@ -400,23 +400,23 @@ except ValueError as e:
 
 **Validated parameters:**
 
-- ✅ **Data Loading:** batch_size, num_workers, val_split, data_dir
-- ✅ **Training:** epochs, learning_rate, temperature, weights
-- ✅ **Models:** model count (≥2), model types, optimizer count
-- ✅ **Configuration:** peer_selection, device specification
-- ✅ **Tensors:** shape validation, dimension checking
+- **Data Loading:** batch_size, num_workers, val_split, data_dir
+- **Training:** epochs, learning_rate, temperature, weights
+- **Models:** model count (≥2), model types, optimizer count
+- **Configuration:** peer_selection, device specification
+- **Tensors:** shape validation, dimension checking
 
 **Benefits:**
 
-- 🎯 Catch errors at configuration time, not runtime
-- 📝 Clear error messages with actual vs. expected values
-- 🔍 Easier debugging with specific parameter names
-- ⚡ Fail fast with actionable feedback
-- 🛡️ Type and value validation for all inputs
+- Catch errors at configuration time, not runtime
+- Clear error messages with actual vs. expected values
+- Easier debugging with specific parameter names
+- Fail fast with actionable feedback
+- Type and value validation for all inputs
 
 See [examples/input_validation_demo.py](examples/input_validation_demo.py) for 7 comprehensive examples.
 
-## 🧪 Testing
+## Testing
 
 Run the test suite:
 
@@ -431,9 +431,9 @@ pytest tests/ -v
 python examples/test_installation.py
 ```
 
-**Current Status:** ✅ 22/22 tests passing | Validation: 100% ready for publication
+**Current Status:** 22/22 tests passing | Validation: 100% ready for publication
 
-## 📊 Benchmarks
+## Benchmarks
 
 Run the CIFAR-100 benchmark:
 
@@ -447,33 +447,33 @@ Expected results (200 epochs):
 - DML (2 networks): ~67-68% accuracy
 - DML (3+ networks): ~68-69% accuracy
 
-## 📚 Documentation
+## Documentation
 
 - [GETTING_STARTED.md](GETTING_STARTED.md) - Quick installation and first steps
 - [examples/](examples/) - 16 working examples
 
-## ✅ Project Status
+## Project Status
 
 **Current Release:** v0.1.0 - Production Ready
 
-### Completed Features ✅
+### Completed Features
 
-- ✅ Core DML implementation
-- ✅ Knowledge Distillation
-- ✅ Co-Distillation Trainer
-- ✅ Feature-Based DML
-- ✅ Attention Transfer
-- ✅ Curriculum Learning
-- ✅ Visualization tools
-- ✅ Robustness analysis
-- ✅ 22/22 tests passing
-- ✅ Validated: +18% accuracy improvement
+- Core DML implementation
+- Knowledge Distillation
+- Co-Distillation Trainer
+- Feature-Based DML
+- Attention Transfer
+- Curriculum Learning
+- Visualization tools
+- Robustness analysis
+- 22/22 tests passing
+- Validated: +18% accuracy improvement
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! This project is actively maintained.
 
-`Note: The project is still in early period and I am still learning and exploring.So, might not reply and go AFK for long so wait to contribute till march..`
+`Note: The project is still in early period and I am still learning and exploring.`
 
 ### Future Enhancements
 
@@ -483,11 +483,11 @@ Contributions are welcome! This project is actively maintained.
 - [ ] PyPI package publication
 - [ ] Jupyter notebook tutorials
 
-## 📜 License
+## License
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-<!-- ## 📚 Citation
+<!-- ##  Citation
 
 If you use DML-PY in your research, please cite:
 
@@ -508,7 +508,7 @@ If you use DML-PY in your research, please cite:
 }
 ``` -->
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 This library implements the method from:
 
@@ -517,11 +517,11 @@ Ying Zhang, Tao Xiang, Timothy M. Hospedales, Huchuan Lu
 CVPR 2018  
 https://arxiv.org/abs/1706.00384
 
-## 📊 Project Stats
+## Project Stats
 
 - **Lines of Code:** ~7,340
 - **Files:** 44 (28 in dml-py/ + 16 examples)
-- **Tests:** 22 (all passing ✅)
+- **Tests:** 22 (all passing )
 - **Examples:** 16 working demos
 - **Models:** 4 architectures (ResNet, MobileNet, WRN)
 - **Trainers:** 5 (DML, Distillation, Co-Distillation, Feature-DML, +Base)
@@ -529,6 +529,6 @@ https://arxiv.org/abs/1706.00384
 
 ---
 
-**Status:** ✅ Production Ready | Validated: +18% Performance Boost
+**Status:** Production Ready | Validated: +18% Performance Boost
 
 _Last Updated: December 28, 2025_

@@ -144,7 +144,7 @@ def compare_methods():
     plt.savefig('confidence_weighted_comparison.png', dpi=150)
     plt.show()
     
-    print(f"\n✓ Comparison plot saved to confidence_weighted_comparison.png")
+    print(f"\n Comparison plot saved to confidence_weighted_comparison.png")
 
 
 def ablation_study():
@@ -185,7 +185,7 @@ def ablation_study():
     plt.savefig('threshold_ablation.png', dpi=150)
     plt.show()
     
-    print(f"\n✓ Ablation plot saved to threshold_ablation.png")
+    print(f"\n Ablation plot saved to threshold_ablation.png")
     print(f"\nBest threshold: {thresholds[results_all.index(max(results_all))]}")
     print(f"Best accuracy: {max(results_all):.2f}%")
 

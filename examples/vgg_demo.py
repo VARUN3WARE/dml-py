@@ -80,7 +80,7 @@ def demonstrate_vgg_models():
         device='cpu'
     )
     
-    print(f"\n✓ DML Trainer initialized with {len(dml_models)} models")
+    print(f"\n DML Trainer initialized with {len(dml_models)} models")
     print()
     
     # 4. VGG for CIFAR-100
@@ -96,7 +96,7 @@ def demonstrate_vgg_models():
     
     print(f"Input shape: {x_cifar100.shape}")
     print(f"Output shape: {output_cifar100.shape}")
-    print(f"✓ Successfully created VGG16 for CIFAR-100")
+    print(f" Successfully created VGG16 for CIFAR-100")
     print()
     
     # 5. Batch Normalization comparison

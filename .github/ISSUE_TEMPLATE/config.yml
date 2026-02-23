@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Future Work & Roadmap
+    url: https://github.com/VARUN3WARE/dml-py/blob/main/FUTURE_WORK.md
+    about: Check the future work document for planned features and contribution ideas
+  - name: Getting Started
+    url: https://github.com/VARUN3WARE/dml-py/blob/main/GETTING_STARTED.md
+    about: Setup instructions for new contributors

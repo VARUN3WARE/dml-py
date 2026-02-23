@@ -31,7 +31,7 @@ python examples/test_installation.py
 You should see:
 
 ```
-✅ All tests passed!
+ All tests passed!
 DML-PY is ready to use!
 ```
 
@@ -327,4 +327,4 @@ Check out:
 - `dml-py/analysis/robustness.py` for model analysis
 - `PLAN.md` for the complete roadmap
 
-Happy training! 🚀
+Happy training! 

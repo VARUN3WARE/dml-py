@@ -1,0 +1,59 @@
+name: Benchmark or Experiment Request
+description: Suggest a new benchmark, experiment, or comparison
+title: "[Benchmark]: "
+labels: ["benchmark", "experiment"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to suggest new benchmarks or experiments that would strengthen the project.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Experiment Description
+      description: What experiment or benchmark do you want to run or see added?
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this experiment important? What question does it answer?
+    validations:
+      required: true
+
+  - type: textarea
+    id: setup
+    attributes:
+      label: Suggested Setup
+      description: Dataset, model architectures, hyperparameters, number of runs, etc.
+      value: |
+        - Dataset: 
+        - Models: 
+        - Epochs: 
+        - Seeds: 
+        - Other: 
+    validations:
+      required: false
+
+  - type: textarea
+    id: baselines
+    attributes:
+      label: Comparison Baselines
+      description: What should the results be compared against?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: compute
+    attributes:
+      label: Estimated Compute
+      options:
+        - Small (< 1 GPU hour)
+        - Medium (1-10 GPU hours)
+        - Large (10-100 GPU hours)
+        - Very Large (100+ GPU hours)
+    validations:
+      required: true

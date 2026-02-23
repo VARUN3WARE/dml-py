@@ -33,7 +33,7 @@ def test_dml_basic():
             assert output.shape == (batch_size, num_classes), \
                 f"Expected shape ({batch_size}, {num_classes}), got {output.shape}"
     
-    print("✓ Forward pass works")
+    print(" Forward pass works")
     
     # Test loss computation
     print("Testing loss computation...")
@@ -47,9 +47,9 @@ def test_dml_basic():
         assert f'model_{i}' in losses, f"Missing loss for model_{i}"
         assert losses[f'model_{i}'].numel() == 1, "Loss should be a scalar"
     
-    print("✓ Loss computation works")
+    print(" Loss computation works")
     
-    print("\n✅ All tests passed!")
+    print("\n All tests passed!")
     print("DML-PY is ready to use!")
 
 

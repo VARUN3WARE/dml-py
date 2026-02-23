@@ -338,7 +338,7 @@ def visualize_results(results):
     
     plt.tight_layout()
     plt.savefig('peer_selection_comparison.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: peer_selection_comparison.png")
+    print(" Saved: peer_selection_comparison.png")
     plt.close()
     
     # Summary table
@@ -358,9 +358,9 @@ def visualize_results(results):
 
 def main():
     """Main demo function."""
-    print("\n" + "🚀 "*25)
+    print("\n" + " "*25)
     print("PEER SELECTION STRATEGIES DEMO")
-    print("🚀 "*25 + "\n")
+    print(" "*25 + "\n")
     
     # Run comparison
     results = compare_strategies()
@@ -368,9 +368,9 @@ def main():
     # Visualize
     visualize_results(results)
     
-    print("\n" + "✅ "*25)
+    print("\n" + " "*25)
     print("DEMO COMPLETED SUCCESSFULLY!")
-    print("✅ "*25 + "\n")
+    print(" "*25 + "\n")
     
     # Print insights
     print("KEY INSIGHTS:")

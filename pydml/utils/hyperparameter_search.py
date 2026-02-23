@@ -122,7 +122,7 @@ class HyperparameterSearcher:
         """Save search results to JSON."""
         with open(output_path, 'w') as f:
             json.dump(self.results, f, indent=2)
-        print(f"✓ Search results saved to {output_path}")
+        print(f" Search results saved to {output_path}")
     
     def plot_results(self, output_path: str) -> None:
         """Plot search results."""
@@ -147,7 +147,7 @@ class HyperparameterSearcher:
         plt.savefig(output_path, dpi=150)
         plt.close()
         
-        print(f"✓ Search plot saved to {output_path}")
+        print(f" Search plot saved to {output_path}")
 
 
 class GridSearcher(HyperparameterSearcher):
@@ -190,7 +190,7 @@ class GridSearcher(HyperparameterSearcher):
         best_config, best_metric = self.get_best_config()
         
         if verbose:
-            print(f"\n✓ Grid search complete!")
+            print(f"\n Grid search complete!")
             print(f"Best {self.metric_name}: {best_metric:.4f}")
             print(f"Best config: {best_config}")
         
@@ -238,7 +238,7 @@ class RandomSearcher(HyperparameterSearcher):
         best_config, best_metric = self.get_best_config()
         
         if verbose:
-            print(f"\n✓ Random search complete!")
+            print(f"\n Random search complete!")
             print(f"Best {self.metric_name}: {best_metric:.4f}")
             print(f"Best config: {best_config}")
         
@@ -313,7 +313,7 @@ class OptunaSearcher(HyperparameterSearcher):
         best_metric = study.best_value
         
         if verbose:
-            print(f"\n✓ Optuna search complete!")
+            print(f"\n Optuna search complete!")
             print(f"Best {self.metric_name}: {best_metric:.4f}")
             print(f"Best config: {best_config}")
         

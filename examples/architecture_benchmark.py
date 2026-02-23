@@ -225,24 +225,24 @@ def print_comparison_table(results):
     
     # Best ensemble accuracy
     best_ensemble = max(results, key=lambda x: x['ensemble_accuracy'])
-    print(f"🏆 Best Ensemble Accuracy: {best_ensemble['ensemble_name']} ({best_ensemble['ensemble_accuracy']:.2f}%)")
+    print(f" Best Ensemble Accuracy: {best_ensemble['ensemble_name']} ({best_ensemble['ensemble_accuracy']:.2f}%)")
     
     # Fastest training
     fastest = min(results, key=lambda x: x['training_time'])
-    print(f"⚡ Fastest Training: {fastest['ensemble_name']} ({fastest['training_time']:.1f}s)")
+    print(f" Fastest Training: {fastest['ensemble_name']} ({fastest['training_time']:.1f}s)")
     
     # Most efficient (accuracy per MB)
     for r in results:
         r['efficiency'] = r['ensemble_accuracy'] / r['total_size_mb']
     most_efficient = max(results, key=lambda x: x['efficiency'])
-    print(f"💡 Most Efficient: {most_efficient['ensemble_name']} ({most_efficient['efficiency']:.3f} acc/MB)")
+    print(f" Most Efficient: {most_efficient['ensemble_name']} ({most_efficient['efficiency']:.3f} acc/MB)")
     
     # Most improvement from DML (ensemble vs best individual)
     for r in results:
         best_ind = max(r['individual_accuracies'])
         r['dml_boost'] = r['ensemble_accuracy'] - best_ind
     best_boost = max(results, key=lambda x: x['dml_boost'])
-    print(f"📈 Best DML Boost: {best_boost['ensemble_name']} (+{best_boost['dml_boost']:.2f}%)")
+    print(f" Best DML Boost: {best_boost['ensemble_name']} (+{best_boost['dml_boost']:.2f}%)")
 
 
 def plot_comparisons(results):
@@ -321,7 +321,7 @@ def plot_comparisons(results):
     
     plt.tight_layout()
     plt.savefig('architecture_benchmark.png', dpi=300, bbox_inches='tight')
-    print(f"\n📊 Comparison plots saved to: architecture_benchmark.png")
+    print(f"\n Comparison plots saved to: architecture_benchmark.png")
     plt.show()
 
 

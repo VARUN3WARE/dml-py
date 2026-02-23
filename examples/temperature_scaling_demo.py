@@ -184,7 +184,7 @@ def compare_temperature_strategies():
     # Load data
     print("\n1. Loading CIFAR-10 dataset...")
     train_loader, test_loader = get_cifar10_loaders(batch_size=128, subset_size=5000)
-    print("   ✓ Data loaded (5000 train samples, 1000 test samples)")
+    print("    Data loaded (5000 train samples, 1000 test samples)")
     
     # Create teacher model (pre-trained)
     print("\n2. Training teacher model...")
@@ -206,7 +206,7 @@ def compare_temperature_strategies():
             optimizer.step()
     
     teacher_acc = evaluate(teacher, test_loader, device)
-    print(f"   ✓ Teacher trained: {teacher_acc:.2f}% accuracy")
+    print(f"    Teacher trained: {teacher_acc:.2f}% accuracy")
     
     # Define temperature strategies
     strategies = {
@@ -295,7 +295,7 @@ def compare_temperature_strategies():
     # Find best strategy
     best_strategy = max(results.items(), key=lambda x: x[1]['best_acc'])
     print("-" * 80)
-    print(f"🏆 Best Strategy: {best_strategy[0]} ({best_strategy[1]['best_acc']:.2f}% accuracy)")
+    print(f" Best Strategy: {best_strategy[0]} ({best_strategy[1]['best_acc']:.2f}% accuracy)")
     print("=" * 80)
     
     # Visualize temperature schedules
@@ -334,7 +334,7 @@ def compare_temperature_strategies():
         
         plt.tight_layout()
         plt.savefig('temperature_strategies_comparison.png', dpi=300, bbox_inches='tight')
-        print("   ✓ Saved: temperature_strategies_comparison.png")
+        print("    Saved: temperature_strategies_comparison.png")
         plt.close()
         
         # Plot 2: Final accuracy comparison
@@ -360,18 +360,18 @@ def compare_temperature_strategies():
         
         plt.tight_layout()
         plt.savefig('temperature_accuracy_comparison.png', dpi=300, bbox_inches='tight')
-        print("   ✓ Saved: temperature_accuracy_comparison.png")
+        print("    Saved: temperature_accuracy_comparison.png")
         plt.close()
         
     except ImportError:
-        print("   ⚠ Matplotlib not available for visualization")
+        print("    Matplotlib not available for visualization")
     
     print("\n" + "=" * 80)
-    print("✓ Temperature scaling demo completed successfully!")
+    print(" Temperature scaling demo completed successfully!")
     print("=" * 80)
     
     # Key insights
-    print("\n📊 KEY INSIGHTS:")
+    print("\n KEY INSIGHTS:")
     print("-" * 80)
     
     improvements = {name: data['best_acc'] - results['Constant (T=4)']['best_acc'] 

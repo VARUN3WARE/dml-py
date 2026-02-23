@@ -144,7 +144,7 @@ def main():
     print(f"\n  Improvement: {improvement:+.2f}%")
     
     if improvement > 0:
-        print("  ✓ Curriculum learning helped!")
+        print("   Curriculum learning helped!")
     else:
         print("  Note: Results may vary with small datasets/short training")
     

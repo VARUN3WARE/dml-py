@@ -72,22 +72,22 @@ PyDML implements state-of-the-art collaborative learning techniques that allow m
 
 ## Key Features
 
-🤝 **Deep Mutual Learning**
+ **Deep Mutual Learning**
 : Train multiple networks collaboratively with bidirectional knowledge transfer
 
-🎓 **Knowledge Distillation**
+ **Knowledge Distillation**
 : Transfer knowledge from teacher to student networks
 
-⚡ **Feature-Based Learning**
+ **Feature-Based Learning**
 : Learn from intermediate representations, not just outputs
 
-📊 **Advanced Monitoring**
+ **Advanced Monitoring**
 : Automatic overfitting detection and training analysis
 
-🛡️ **Production-Ready**
+ **Production-Ready**
 : Comprehensive input validation, checkpoint management, error handling
 
-🔬 **Research Tools**
+ **Research Tools**
 : Curriculum learning, peer selection strategies, attention transfer
 
 ## Quick Example

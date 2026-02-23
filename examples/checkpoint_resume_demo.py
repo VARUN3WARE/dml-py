@@ -50,18 +50,18 @@ def example_1_basic_checkpointing():
     checkpoint_path = 'my_checkpoint.pt'
     print(f"\n2. Saving checkpoint to {checkpoint_path}...")
     trainer.save_checkpoint(checkpoint_path)
-    print("   ✓ Checkpoint saved")
+    print("    Checkpoint saved")
     
     # Create new trainer and load
     print("\n3. Loading checkpoint into new trainer...")
     new_models = [nn.Sequential(nn.Linear(10, 5)).cpu() for _ in range(2)]
     new_trainer = DMLTrainer(new_models, device='cpu')
     new_trainer.load_checkpoint(checkpoint_path)
-    print(f"   ✓ Loaded at epoch: {new_trainer.current_epoch}")
+    print(f"    Loaded at epoch: {new_trainer.current_epoch}")
     
     # Cleanup
     os.remove(checkpoint_path)
-    print("\n✓ Basic checkpoint save/load complete!")
+    print("\n Basic checkpoint save/load complete!")
 
 
 def example_2_checkpoint_manager():
@@ -167,7 +167,7 @@ def example_3_resume_training():
         # Continue training
         print("\n3. Continuing training (epochs 4-6)...")
         new_trainer.fit(train_loader, val_loader, epochs=6, start_epoch=start_epoch-1, verbose=False)
-        print(f"   ✓ Training completed to epoch {new_trainer.current_epoch}")
+        print(f"    Training completed to epoch {new_trainer.current_epoch}")
         
     finally:
         if os.path.exists(checkpoint_dir):
@@ -211,14 +211,14 @@ def example_4_best_model_tracking():
             manager.save(trainer, epoch=epoch, metrics=metrics)
             print(f"  Epoch {epoch}: val_acc={acc:.2f}%")
         
-        print(f"\n✓ Best accuracy: {manager.best_value:.2f}%")
+        print(f"\n Best accuracy: {manager.best_value:.2f}%")
         
         # Load best model
         print("\nLoading best model...")
         new_models = [nn.Sequential(nn.Linear(10, 5)).cpu() for _ in range(2)]
         new_trainer = DMLTrainer(new_models, device='cpu')
         epoch = manager.load_best(new_trainer)
-        print(f"✓ Loaded best model from epoch {epoch}")
+        print(f" Loaded best model from epoch {epoch}")
         
     finally:
         if os.path.exists(checkpoint_dir):
@@ -259,7 +259,7 @@ def example_5_callback_based_checkpointing():
         # Callbacks trigger automatically during fit()
         trainer.fit(train_loader, val_loader, epochs=3, verbose=False)
         
-        print("\n✓ Checkpoints saved automatically via callback")
+        print("\n Checkpoints saved automatically via callback")
         
     finally:
         if os.path.exists(checkpoint_dir):
@@ -297,7 +297,7 @@ def example_6_periodic_checkpointing():
         
         # Count saved checkpoints
         checkpoints = [f for f in os.listdir(checkpoint_dir) if f.startswith('checkpoint')]
-        print(f"\n✓ Saved {len(checkpoints)} checkpoints (epochs 2, 4)")
+        print(f"\n Saved {len(checkpoints)} checkpoints (epochs 2, 4)")
         
     finally:
         if os.path.exists(checkpoint_dir):

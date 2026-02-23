@@ -102,13 +102,13 @@ def main():
         print(f"  Model {i}: {acc:.2f}%")
     
     print(f"\n{'='*60}")
-    print("✅ Demo Complete!")
+    print(" Demo Complete!")
     print('='*60)
     print("\nKey Observations:")
-    print("  ✓ Both models trained collaboratively")
-    print("  ✓ Learning from each other via mimicry loss")
-    print("  ✓ Memory usage kept minimal")
-    print(f"  ✓ Training completed in {num_epochs} epochs")
+    print("   Both models trained collaboratively")
+    print("   Learning from each other via mimicry loss")
+    print("   Memory usage kept minimal")
+    print(f"   Training completed in {num_epochs} epochs")
 
 if __name__ == '__main__':
     main()

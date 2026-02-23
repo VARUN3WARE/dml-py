@@ -513,7 +513,7 @@ class TrainingMonitor:
         lines.append(f"Status: {status.value.replace('_', ' ').title()}")
         
         if status in [OverfittingStatus.MODERATE_OVERFITTING, OverfittingStatus.SEVERE_OVERFITTING]:
-            lines.append("⚠️  Warning: Overfitting detected!")
+            lines.append("  Warning: Overfitting detected!")
         
         lines.append("=" * 60)
         return "\n".join(lines)

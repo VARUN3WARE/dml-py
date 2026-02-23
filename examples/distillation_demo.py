@@ -149,7 +149,7 @@ def main():
             teacher_acc = 100. * correct / total
             print(f"  Epoch {epoch}/{num_epochs} - Loss: {avg_loss:.4f} | Acc: {teacher_acc:.2f}%")
     
-    print(f"\n✓ Teacher training complete! Final accuracy: {teacher_acc:.2f}%")
+    print(f"\n Teacher training complete! Final accuracy: {teacher_acc:.2f}%")
     print("-" * 60)
     
     # Step 2: Train student with distillation
@@ -177,7 +177,7 @@ def main():
     )
     
     distilled_acc = history_distilled['val_acc'][-1]
-    print(f"\n✓ Distillation complete! Final accuracy: {distilled_acc:.2f}%")
+    print(f"\n Distillation complete! Final accuracy: {distilled_acc:.2f}%")
     print("-" * 60)
     
     # Step 3: Train student baseline (without distillation)
@@ -189,7 +189,7 @@ def main():
         student_baseline, train_loader, test_loader, device, epochs=num_epochs
     )
     
-    print(f"\n✓ Baseline training complete! Final accuracy: {baseline_acc:.2f}%")
+    print(f"\n Baseline training complete! Final accuracy: {baseline_acc:.2f}%")
     print("-" * 60)
     
     # Step 4: Compare results
@@ -207,7 +207,7 @@ def main():
     print(f"  Gap to Teacher:               {teacher_gap:.2f}%")
     
     if improvement > 0:
-        print("\n  ✓ Knowledge distillation helped!")
+        print("\n   Knowledge distillation helped!")
         print(f"    Student learned {improvement:.1f}% better with teacher guidance")
     else:
         print("\n  Note: Results may vary with small datasets")

@@ -81,7 +81,7 @@ for epoch in range(1, 11):
     
     # Check for overfitting
     if monitor.is_overfitting():
-        print(f"  ⚠️  Overfitting detected!")
+        print(f"    Overfitting detected!")
     
     print()
 
@@ -279,7 +279,7 @@ for epoch in range(1, MAX_EPOCHS + 1):
         if status in [OverfittingStatus.MODERATE_OVERFITTING, 
                      OverfittingStatus.SEVERE_OVERFITTING]:
             report = monitor.get_overfitting_report()
-            print(f"  ⚠️  Action needed! Top recommendation:")
+            print(f"    Action needed! Top recommendation:")
             print(f"     {report.recommendations[0]}")
     
     # Early stopping check
@@ -402,38 +402,38 @@ Best Practices for Training Monitoring:
 
 Common Pitfalls to Avoid:
 
-❌ Only looking at validation accuracy (miss overfitting)
-❌ Not checking train accuracy (miss underfitting)
-❌ Training too long without early stopping
-❌ Ignoring generalization gap
-❌ Not saving best model checkpoint
-❌ Using latest model instead of best for deployment
-❌ Not acting on overfitting warnings
-❌ Inappropriate thresholds for dataset size
+ Only looking at validation accuracy (miss overfitting)
+ Not checking train accuracy (miss underfitting)
+ Training too long without early stopping
+ Ignoring generalization gap
+ Not saving best model checkpoint
+ Using latest model instead of best for deployment
+ Not acting on overfitting warnings
+ Inappropriate thresholds for dataset size
 
 Interpreting Results:
 
-✓ **Healthy Training:**
+ **Healthy Training:**
    - Train and val accuracy both improving
    - Gap < 5%
    - Val loss decreasing
    
-✓ **Mild Overfitting (OK):**
+ **Mild Overfitting (OK):**
    - Gap 3-5%
    - Val accuracy still improving
    - Continue training, monitor closely
    
-⚠️ **Moderate Overfitting:**
+ **Moderate Overfitting:**
    - Gap 5-10%
    - Val accuracy plateaued
    - Consider early stopping soon
    
-🛑 **Severe Overfitting:**
+ **Severe Overfitting:**
    - Gap > 10%
    - Val accuracy degrading
    - Stop training, add regularization, restart
    
-⚠️ **Underfitting:**
+ **Underfitting:**
    - Both train and val accuracy low (< 60%)
    - Not improving
    - Need more capacity or longer training

@@ -161,9 +161,9 @@ class ModelCheckpoint(Callback):
             
             if self.verbose:
                 if is_best:
-                    print(f"✓ Saved best model to {filepath} ({self.monitor}: {self.best_value:.4f})")
+                    print(f" Saved best model to {filepath} ({self.monitor}: {self.best_value:.4f})")
                 else:
-                    print(f"✓ Saved checkpoint to {filepath}")
+                    print(f" Saved checkpoint to {filepath}")
 
 
 class LearningRateLogger(Callback):

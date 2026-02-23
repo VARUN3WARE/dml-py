@@ -64,11 +64,11 @@ def print_stats():
     # Analyze code
     stats = analyze_directory(root_dir)
     
-    print(f"\n📊 Overall Statistics:")
+    print(f"\n Overall Statistics:")
     print(f"  Total Python Files: {stats['total_files']}")
     print(f"  Total Lines of Code: {stats['total_lines']:,}")
     
-    print(f"\n📁 Breakdown by Directory:")
+    print(f"\n Breakdown by Directory:")
     print(f"{'Category':<20} {'Files':<10} {'Lines':<10}")
     print("-" * 40)
     
@@ -77,21 +77,21 @@ def print_stats():
         print(f"{category:<20} {data['files']:<10} {data['lines']:<10,}")
     
     # Test statistics
-    print(f"\n🧪 Testing:")
+    print(f"\n Testing:")
     test_dir = root_dir / 'tests'
     if test_dir.exists():
         test_files = list(test_dir.glob('test_*.py'))
         print(f"  Test Files: {len(test_files)}")
     
     # Example statistics
-    print(f"\n📝 Examples:")
+    print(f"\n Examples:")
     examples_dir = root_dir / 'examples'
     if examples_dir.exists():
         example_files = list(examples_dir.glob('*.py'))
         print(f"  Example Scripts: {len(example_files)}")
     
     # Model statistics
-    print(f"\n🏗️ Models:")
+    print(f"\n Models:")
     models_dir = root_dir / 'pydml' / 'models' / 'cifar'
     if models_dir.exists():
         model_files = [f for f in models_dir.glob('*.py') if f.name != '__init__.py']
@@ -100,7 +100,7 @@ def print_stats():
             print(f"    - {model_file.stem}")
     
     # Documentation
-    print(f"\n📚 Documentation:")
+    print(f"\n Documentation:")
     doc_files = ['README.md', 'PLAN.md', 'IMPLEMENTATION_SUMMARY.md', 'STATUS.md']
     for doc in doc_files:
         doc_path = root_dir / doc
@@ -109,7 +109,7 @@ def print_stats():
             print(f"  {doc:<30} {lines:>6} lines")
     
     print("\n" + "=" * 60)
-    print("✅ Phase 1 Implementation Complete!")
+    print(" Phase 1 Implementation Complete!")
     print("=" * 60)
 
 

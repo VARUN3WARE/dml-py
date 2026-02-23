@@ -95,9 +95,9 @@ trainer = DMLTrainer(
     device='cpu'
 )
 
-print(f"✓ Created trainer with {len(models)} models")
-print(f"✓ Scheduler type: {config.scheduler_type.value}")
-print(f"✓ Initial LR: {trainer.get_learning_rates()[0]:.6f}")
+print(f" Created trainer with {len(models)} models")
+print(f" Scheduler type: {config.scheduler_type.value}")
+print(f" Initial LR: {trainer.get_learning_rates()[0]:.6f}")
 print()
 
 # Train for a few epochs
@@ -408,11 +408,11 @@ Best Practices for Learning Rate Scheduling:
    - Start from 1e-6 or 1% of base LR
 
 7. **Common Pitfalls to Avoid**
-   - ❌ Forgetting to call scheduler.step()
-   - ❌ Different schedules for different models (in DML)
-   - ❌ Too aggressive decay (LR drops too fast)
-   - ❌ No warmup with large LR (unstable start)
-   - ❌ Wrong scheduler for task (e.g., step LR for fine-tuning)
+   -  Forgetting to call scheduler.step()
+   -  Different schedules for different models (in DML)
+   -  Too aggressive decay (LR drops too fast)
+   -  No warmup with large LR (unstable start)
+   -  Wrong scheduler for task (e.g., step LR for fine-tuning)
 
 8. **Monitoring Learning Rate**
    ```python

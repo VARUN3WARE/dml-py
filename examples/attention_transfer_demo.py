@@ -234,7 +234,7 @@ def main():
             print(f"  Epoch {epoch}/{num_epochs} - Accuracy: {acc:.2f}%")
     
     teacher_acc = acc
-    print(f"\n✓ Teacher training complete! Final accuracy: {teacher_acc:.2f}%")
+    print(f"\n Teacher training complete! Final accuracy: {teacher_acc:.2f}%")
     print("-" * 60)
     
     # Train student WITH attention transfer
@@ -262,7 +262,7 @@ def main():
             print(f"  Epoch {epoch}/{num_epochs} - Loss: {loss:.4f} | Accuracy: {acc:.2f}%")
     
     acc_with_at = trainer_with_at.evaluate(test_loader)
-    print(f"\n✓ Training complete! Final accuracy: {acc_with_at:.2f}%")
+    print(f"\n Training complete! Final accuracy: {acc_with_at:.2f}%")
     print("-" * 60)
     
     # Train student WITHOUT attention transfer (standard distillation)
@@ -290,7 +290,7 @@ def main():
             print(f"  Epoch {epoch}/{num_epochs} - Loss: {loss:.4f} | Accuracy: {acc:.2f}%")
     
     acc_no_at = trainer_no_at.evaluate(test_loader)
-    print(f"\n✓ Training complete! Final accuracy: {acc_no_at:.2f}%")
+    print(f"\n Training complete! Final accuracy: {acc_no_at:.2f}%")
     print("-" * 60)
     
     # Compare results
@@ -310,7 +310,7 @@ def main():
     print(f"  Gap to Teacher (without AT):     {gap_without:.2f}%")
     
     if improvement > 0:
-        print("\n  ✓ Attention transfer helped!")
+        print("\n   Attention transfer helped!")
         print("    Student learned better spatial attention patterns")
     else:
         print("\n  Note: Results may vary with small datasets")

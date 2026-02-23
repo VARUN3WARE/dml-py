@@ -151,11 +151,11 @@ def run_all_tests():
     for name, test_func in tests:
         try:
             test_func()
-            results.append((name, True, f"✓ {name} passed"))
-            print(f"✓ {name} passed")
+            results.append((name, True, f" {name} passed"))
+            print(f" {name} passed")
         except Exception as e:
-            results.append((name, False, f"✗ {name} failed: {str(e)}"))
-            print(f"✗ {name} failed: {str(e)}")
+            results.append((name, False, f" {name} failed: {str(e)}"))
+            print(f" {name} failed: {str(e)}")
             traceback.print_exc()
     
     print()
@@ -170,10 +170,10 @@ def run_all_tests():
     print(f"Success Rate: {passed/total*100:.1f}%")
     
     if passed == total:
-        print("\n🎉 ALL TESTS PASSED! DML-PY is fully operational.")
+        print("\n ALL TESTS PASSED! DML-PY is fully operational.")
         return 0
     else:
-        print(f"\n⚠️  {total - passed} test(s) failed.")
+        print(f"\n  {total - passed} test(s) failed.")
         print("\nFailed tests:")
         for name, success, message in results:
             if not success:

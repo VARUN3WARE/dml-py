@@ -417,7 +417,7 @@ Contributors will be:
 
 - Listed in CONTRIBUTORS.md
 - Mentioned in release notes
-- Forever appreciated! 🎉
+- Forever appreciated! 
 
 ## License
 
@@ -425,4 +425,4 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ---
 
-Thank you for making DML-PY better! 🚀
+Thank you for making DML-PY better! 

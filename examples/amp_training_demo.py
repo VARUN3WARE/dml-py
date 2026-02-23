@@ -51,7 +51,7 @@ def example_1_basic_amp():
     # Train for one epoch
     print("\nTraining with AMP...")
     trainer.train_epoch(loader, epoch=1)
-    print("✓ Training completed successfully with AMP!")
+    print(" Training completed successfully with AMP!")
 
 
 def example_2_amp_config():
@@ -263,7 +263,7 @@ def example_5_bfloat16():
     # Train
     print("\nTraining with BFloat16...")
     trainer.train_epoch(loader, epoch=1)
-    print("✓ Training completed with BFloat16!")
+    print(" Training completed with BFloat16!")
 
 
 def example_6_checkpoint_with_amp():
@@ -315,7 +315,7 @@ def example_6_checkpoint_with_amp():
         print("Loading checkpoint...")
         new_trainer.load_checkpoint(checkpoint_path)
         
-        print("✓ Checkpoint loaded successfully!")
+        print(" Checkpoint loaded successfully!")
         print(f"  Epoch: {new_trainer.current_epoch}")
         print(f"  Global step: {new_trainer.global_step}")
 
@@ -351,14 +351,14 @@ Best Practices for Automatic Mixed Precision Training:
    ```
 
 4. When to Use AMP:
-   ✓ Large models (ResNet, Transformers, etc.)
-   ✓ High-resolution images
-   ✓ GPUs with Tensor Cores (V100, A100, RTX 20/30/40 series)
-   ✓ Batch size limited by memory
+    Large models (ResNet, Transformers, etc.)
+    High-resolution images
+    GPUs with Tensor Cores (V100, A100, RTX 20/30/40 series)
+    Batch size limited by memory
    
-   ✗ Small models (overhead may outweigh benefits)
-   ✗ Models with numerical instability
-   ✗ CPUs (AMP is CUDA-only)
+    Small models (overhead may outweigh benefits)
+    Models with numerical instability
+    CPUs (AMP is CUDA-only)
 
 5. Memory Savings:
    - FP16/BF16 uses ~50% less memory than FP32

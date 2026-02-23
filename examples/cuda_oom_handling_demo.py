@@ -140,12 +140,12 @@ def example_4_auto_batch_size_reduction():
             loss = output.sum()
             loss.backward()
             
-            print(f"✓ Training successful with batch size: {batch_size}")
+            print(f" Training successful with batch size: {batch_size}")
             success = True
             
         except RuntimeError as e:
             if "out of memory" in str(e).lower():
-                print(f"✗ OOM with batch size {batch_size}, reducing...")
+                print(f" OOM with batch size {batch_size}, reducing...")
                 reducer.reduce()
                 clear_cuda_cache()
             else:
@@ -260,7 +260,7 @@ def example_6_full_training_with_oom_handling():
                     break
             
             avg_loss = total_loss / min(6, len(dataloader))
-            print(f"✓ Training completed successfully!")
+            print(f" Training completed successfully!")
             print(f"  Average loss: {avg_loss:.4f}")
             
             if torch.cuda.is_available():
@@ -270,13 +270,13 @@ def example_6_full_training_with_oom_handling():
             
         except RuntimeError as e:
             if "out of memory" in str(e).lower():
-                print(f"✗ OOM occurred, reducing batch size...")
+                print(f" OOM occurred, reducing batch size...")
                 reducer.reduce()
                 clear_cuda_cache()
             else:
                 raise
         except CUDAOutOfMemoryError as e:
-            print(f"✗ OOM: {e}")
+            print(f" OOM: {e}")
             reducer.reduce()
             clear_cuda_cache()
 

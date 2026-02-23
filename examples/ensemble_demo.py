@@ -137,11 +137,11 @@ def demonstrate_ensemble_methods():
     print()
     
     if diversity > 0.3:
-        print("✓ High diversity - good for ensemble performance!")
+        print(" High diversity - good for ensemble performance!")
     elif diversity > 0.1:
         print("○ Moderate diversity - ensemble may help")
     else:
-        print("✗ Low diversity - models are too similar")
+        print(" Low diversity - models are too similar")
     print()
     
     # 8. EnsembleModel Wrapper

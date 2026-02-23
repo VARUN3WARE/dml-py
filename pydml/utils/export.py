@@ -116,7 +116,7 @@ class ModelExporter:
         else:
             raise ValueError(f"Unsupported export format: {self.config.format}")
         
-        print(f"✓ Model exported successfully to {output_path}")
+        print(f" Model exported successfully to {output_path}")
     
     def _export_onnx(self, output_path: Path, dummy_input: torch.Tensor) -> None:
         """Export model to ONNX format."""
@@ -163,7 +163,7 @@ class ModelExporter:
             if not np.allclose(ort_outputs[0], torch_output, rtol=1e-3, atol=1e-5):
                 warnings.warn("ONNX output differs from PyTorch output")
             else:
-                print("✓ ONNX export verified successfully")
+                print(" ONNX export verified successfully")
                 
         except ImportError:
             warnings.warn("onnx/onnxruntime not installed, skipping verification")
@@ -209,7 +209,7 @@ class ModelExporter:
             if not torch.allclose(original_output, loaded_output, rtol=1e-3, atol=1e-5):
                 warnings.warn("TorchScript output differs from original PyTorch output")
             else:
-                print("✓ TorchScript export verified successfully")
+                print(" TorchScript export verified successfully")
                 
         except Exception as e:
             warnings.warn(f"TorchScript verification failed: {str(e)}")
@@ -265,7 +265,7 @@ def export_ensemble(
         output_path = output_dir / f"model_{i}{ext}"
         exporter.export(output_path, input_shape, device)
     
-    print(f"\n✓ Exported {len(models)} models to {output_dir}")
+    print(f"\n Exported {len(models)} models to {output_dir}")
 
 
 def quick_export(

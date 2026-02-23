@@ -149,7 +149,7 @@ class LossLandscape:
         plt.savefig(output_path, dpi=150)
         plt.close()
         
-        print(f"✓ 1D loss landscape saved to {output_path}")
+        print(f" 1D loss landscape saved to {output_path}")
     
     def plot_2d(
         self,
@@ -232,7 +232,7 @@ class LossLandscape:
         plt.savefig(output_path, dpi=150)
         plt.close()
         
-        print(f"✓ 2D loss landscape saved to {output_path}")
+        print(f" 2D loss landscape saved to {output_path}")
     
     def plot_trajectory(
         self,
@@ -294,7 +294,7 @@ class LossLandscape:
         plt.savefig(output_path, dpi=150)
         plt.close()
         
-        print(f"✓ Training trajectory saved to {output_path}")
+        print(f" Training trajectory saved to {output_path}")
 
 
 def quick_landscape_analysis(
@@ -333,7 +333,7 @@ def quick_landscape_analysis(
     landscape.plot_2d(output_dir / '2d_landscape_3d.png',
                      direction1=dir1, direction2=dir2, num_points=20, plot_3d=True)
     
-    print(f"\n✓ Loss landscape analysis complete! Plots saved to {output_dir}")
+    print(f"\n Loss landscape analysis complete! Plots saved to {output_dir}")
 
 
 __all__ = [

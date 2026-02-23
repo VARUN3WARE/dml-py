@@ -141,7 +141,7 @@ def main():
     print(f"\n  Improvement: {improvement:+.2f}%")
     
     if improvement > 0:
-        print("\n  ✓ Feature-level matching helped!")
+        print("\n   Feature-level matching helped!")
         print("    Models learned better internal representations")
     elif improvement < 0:
         print("\n  Note: Feature matching added complexity")

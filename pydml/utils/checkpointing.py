@@ -116,7 +116,7 @@ class CheckpointManager:
             best_path = self.checkpoint_dir / f"{prefix}_best.pt"
             shutil.copy2(filepath, best_path)
             self.best_checkpoint = str(best_path)
-            print(f"✓ Saved best model: {self.monitor} = {monitor_value:.4f}")
+            print(f" Saved best model: {self.monitor} = {monitor_value:.4f}")
         
         # Cleanup old checkpoints
         if self.max_to_keep is not None:
@@ -325,7 +325,7 @@ def auto_resume(trainer: Any, checkpoint_dir: str = 'checkpoints', resume_mode: 
         epoch = manager.load_latest(trainer)
     
     if epoch is not None:
-        print(f"✓ Resumed training from epoch {epoch}")
+        print(f" Resumed training from epoch {epoch}")
         return epoch + 1  # Start from next epoch
     else:
         print("No checkpoint found, starting from scratch")
