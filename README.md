@@ -1,534 +1,125 @@
-# pytorch-dml - A Collaborative Deep Learning Library
-
-![pytorch-dml Banner](banner.png)
+# pytorch-dml
 
 [![PyPI version](https://badge.fury.io/py/pytorch-dml.svg)](https://badge.fury.io/py/pytorch-dml)
-[![PyPI](https://img.shields.io/pypi/v/pytorch-dml)](https://pypi.org/project/pytorch-dml/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](tests/)
 [![Documentation](https://img.shields.io/badge/docs-sphinx-blue.svg)](https://varun3ware.github.io/dml-py/)
 
-**pytorch-dml** is a production-ready library for collaborative neural network training, incorporating Deep Mutual Learning (DML) and related research advances.
+A collaborative deep learning library implementing Deep Mutual Learning (DML) and related methods in PyTorch. Train multiple neural networks simultaneously so they learn from each other's predictions alongside ground truth labels.
 
-> **Now on PyPI!** Install with `pip install pytorch-dml` - Production-ready with 295 tests passing  
->  **[Read the full documentation →](docs/README.md)** | [API Reference](docs/api/core.md) | [Tutorials](docs/tutorials/basic_dml.md)
+**[Documentation](docs/README.md)** | **[API Reference](docs/api/core.md)** | **[Examples](examples/)** | **[Future Work](FUTURE_WORK.md)**
 
-## Quick Start
-
-### Installation
+## Installation
 
 ```bash
 pip install pytorch-dml
 ```
 
-### 5-Line Example
+Or from source:
 
-```python
-from pydml import DMLTrainer
-from torchvision import models
-
-models = [models.resnet18(), models.resnet18()]
-trainer = DMLTrainer(models, device='cuda')
-trainer.fit(train_loader, val_loader, epochs=100)
+```bash
+git clone https://github.com/VARUN3WARE/dml-py.git
+cd dml-py
+pip install -e .
 ```
 
-### Complete Example
+Requires Python >= 3.8, PyTorch >= 2.0.0, torchvision >= 0.15.0.
+
+## Quick Start
 
 ```python
 import torch
-from dml-py import DMLTrainer, DMLConfig
-from dml-py.models.cifar import resnet32
-from dml-py.utils.data import get_cifar100_loaders
+from pydml import DMLTrainer, DMLConfig
+from pydml.models.cifar import resnet32
 
-# Load data
-train_loader, val_loader, test_loader = get_cifar100_loaders(
-    batch_size=128, download=True
-)
-
-# Create models
 models = [resnet32(num_classes=100) for _ in range(2)]
 
-# Configure DML
-config = DMLConfig(
-    temperature=3.0,
-    supervised_weight=1.0,
-    mimicry_weight=1.0
-)
+config = DMLConfig(temperature=3.0, supervised_weight=1.0, mimicry_weight=1.0)
 
-# Setup optimizers
 optimizers = [
     torch.optim.SGD(m.parameters(), lr=0.1, momentum=0.9, weight_decay=5e-4)
     for m in models
 ]
 
-# Train collaboratively
 trainer = DMLTrainer(models, config=config, device='cuda', optimizers=optimizers)
 history = trainer.fit(train_loader, val_loader, epochs=200)
 
-# Evaluate
 test_metrics = trainer.evaluate(test_loader)
 print(f"Test Accuracy: {test_metrics['val_acc']:.2f}%")
 ```
 
 ## Features
 
-- **Deep Mutual Learning**: Train multiple networks collaboratively
-- **Reproducibility**: Built-in seed management for consistent results
-- **CUDA OOM Handling**: Automatic out-of-memory error recovery and monitoring
-- **Mixed Precision Training**: Automatic FP16/BF16 support for faster training
-- � **Checkpoint Management**: Auto-save, resume training, best model tracking
-- **LR Scheduling**: Warmup, cosine annealing, pre-configured recipes for optimal convergence
-- **Multiple Architectures**: ResNet, MobileNet, WideResNet for CIFAR
-- **Modular Design**: Easy to extend and customize
-- **Research-Ready**: Built for experimentation
-- **Analysis Tools**: Robustness testing, metrics, visualization
-- **Well-Tested**: 40+ unit tests, all passing
-- **Well-Documented**: Examples and inline documentation
+| Category        | Details                                                                       |
+| --------------- | ----------------------------------------------------------------------------- |
+| **Trainers**    | DML, Knowledge Distillation, Co-Distillation, Feature-based DML               |
+| **Models**      | ResNet32/110, MobileNetV2, WRN-28-10 (CIFAR variants)                         |
+| **Strategies**  | Curriculum learning, Peer selection, Temperature scaling                      |
+| **Training**    | Mixed precision (FP16/BF16), Checkpoint management, LR scheduling with warmup |
+| **Analysis**    | Overfitting detection, Robustness testing, Loss landscape, Visualization      |
+| **Reliability** | CUDA OOM handling, Input validation, Reproducibility via seed management      |
 
-## Installation
+## Benchmark Results (CIFAR-10)
 
-### From Source
+| Method                 | Accuracy | Parameters | Training Time |
+| ---------------------- | -------- | ---------- | ------------- |
+| ResNet32 (baseline)    | 93.50%   | 467K       | 59 min        |
+| MobileNetV2 (baseline) | 92.50%   | 2.2M       | 224 min       |
+| WRN-28-10 (baseline)   | 96.05%   | 36.5M      | 1141 min      |
+| DML 2x ResNet32        | 93.86%   | 933K       | 84 min        |
 
-```bash
-git clone https://github.com/VARUN3WARE/dml-py.git
-cd dml-py
+DML achieves +0.36% accuracy improvement over a single ResNet32 with modest training overhead. See [benchmarks/](benchmarks/) for full experiment details and reproducible configs.
 
-# Using uv (fast)
-uv venv .venv
-source .venv/bin/activate
-uv pip install -e .
+## Key APIs
 
-# Or using pip
-pip install -e .
-```
-
-### From PyPI
-
-```bash
-pip install pytorch-dml
-```
-
-### Requirements
-
-- Python >= 3.8
-- PyTorch >= 2.0.0
-- torchvision >= 0.15.0
-- numpy >= 1.21.0
-- tqdm >= 4.65.0
-
-## What's Implemented
-
-### Core Components
-
-- [x] BaseCollaborativeTrainer with full training loop
-- [x] DML Trainer (Algorithm 1 from paper)
-- [x] Knowledge Distillation Trainer
-- [x] Co-Distillation Trainer (teacher + peer learning)
-- [x] Feature-Based DML Trainer
-- [x] Loss functions (CE, KL, DML, Attention Transfer)
-- [x] Callbacks (EarlyStopping, ModelCheckpoint, TensorBoard)
-
-### Model Zoo
-
-- [x] ResNet32, ResNet110
-- [x] MobileNetV2
-- [x] Wide ResNet 28-10
-
-### Advanced Features
-
-- [x] Curriculum Learning strategies
-- [x] Visualization tools (6 plot types)
-- [x] Robustness analysis
-- [x] Attention transfer mechanisms
-
-### Utilities
-
-- [x] CIFAR-10/100 data loaders
-- [x] Metrics (accuracy, ECE, entropy, diversity)
-- [x] Experiment logging
-
-### Examples
-
-- [x] 17 working demo scripts
-- [x] Quick start guide
-- [x] CIFAR-100 benchmark
-- [x] Advanced training examples
-- [x] Checkpoint/resume workflow
-
-### Checkpoint Management
-
-Save and resume training seamlessly:
+**Checkpoint Management:**
 
 ```python
-from pydml import DMLTrainer
 from pydml.utils import CheckpointManager, auto_resume
 
-# Create trainer
-models = [resnet32() for _ in range(2)]
-trainer = DMLTrainer(models, device='cuda')
-
-# Option 1: Automatic resume
 start_epoch = auto_resume(trainer, checkpoint_dir='checkpoints')
 trainer.fit(train_loader, val_loader, epochs=200, start_epoch=start_epoch)
-
-# Option 2: Manual checkpoint management
-manager = CheckpointManager(
-    checkpoint_dir='checkpoints',
-    max_to_keep=5,  # Keep only 5 recent checkpoints
-    keep_best=True,  # Always preserve best model
-    monitor='val_loss',
-    mode='min'
-)
-
-for epoch in range(1, 201):
-    train_metrics = trainer.train_epoch(train_loader, epoch)
-    val_metrics = trainer.evaluate(val_loader)
-
-    # Save with automatic best model tracking
-    manager.save(trainer, epoch, {**train_metrics, **val_metrics})
-
-# Load best model for deployment
-best_epoch = manager.load_best(trainer)
-print(f"Loaded best model from epoch {best_epoch}")
 ```
 
-See [examples/checkpoint_resume_demo.py](examples/checkpoint_resume_demo.py) for 7 complete examples.
-
-### Learning Rate Scheduling
-
-Optimize convergence with advanced LR scheduling including warmup and pre-configured recipes:
+**LR Scheduling with Warmup:**
 
 ```python
-from pydml import DMLTrainer
-from pydml.utils import SchedulerConfig, SchedulerType, WarmupConfig, get_cifar_schedule
+from pydml.utils import get_cifar_schedule
 
-# Option 1: Use pre-configured recipe (recommended)
-models = [resnet32() for _ in range(2)]
-optimizers = [torch.optim.SGD(m.parameters(), lr=0.1, momentum=0.9) for m in models]
-
-# CIFAR training recipe with warmup + cosine annealing
 schedulers = get_cifar_schedule(optimizers, total_epochs=200, warmup_epochs=5)
-
 trainer = DMLTrainer(models, optimizers=optimizers, schedulers=schedulers, device='cuda')
-trainer.fit(train_loader, val_loader, epochs=200)
-
-# Option 2: Custom configuration with warmup
-config = SchedulerConfig(
-    scheduler_type=SchedulerType.COSINE,
-    base_lr=0.1,
-    T_max=200,
-    eta_min=0.0,
-    warmup=WarmupConfig(
-        warmup_epochs=5,
-        warmup_start_lr=1e-6,
-        warmup_method='linear'  # 'linear', 'exponential', or 'cosine'
-    )
-)
-
-from pydml.utils import create_schedulers_from_config
-schedulers = create_schedulers_from_config(optimizers, config)
-
-# Available pre-configured recipes:
-# - get_cifar_schedule(): CIFAR-10/100 with cosine + warmup
-# - get_imagenet_schedule(): ImageNet with multistep
-# - get_fine_tuning_schedule(): Transfer learning with gentle decay
-
-# Supported scheduler types:
-# STEP, MULTISTEP, EXPONENTIAL, COSINE, COSINE_WARMRESTART,
-# REDUCE_ON_PLATEAU, ONE_CYCLE, POLYNOMIAL, LINEAR, CONSTANT
 ```
 
-**Benefits:**
-
-- Improved convergence and higher final accuracy
-- Warmup prevents unstable early training
-- Pre-configured recipes for common scenarios
-- Easy configuration with SchedulerConfig
-- Compatible with all PyTorch optimizers
-
-See [examples/lr_scheduling_demo.py](examples/lr_scheduling_demo.py) for 8 comprehensive examples and best practices.
-
-### Training Monitoring & Overfitting Detection
-
-Automatically detect overfitting, track training progress, and get actionable recommendations:
+**Training Monitor:**
 
 ```python
-from pydml import DMLTrainer, TrainingMonitor, OverfittingStatus
+from pydml import TrainingMonitor
 
-# Create trainer and monitor
-trainer = DMLTrainer([model1, model2], device='cuda')
-monitor = TrainingMonitor(
-    window_size=5,              # Rolling window for trend analysis
-    overfitting_threshold=5.0,  # Alert when gap > 5%
-)
-
-# Training loop with monitoring
-for epoch in range(1, 201):
-    train_metrics = trainer.train_epoch(train_loader, epoch)
-    val_metrics = trainer.evaluate(val_loader)
-
-    # Update monitor
-    monitor.update(epoch, train_metrics, val_metrics)
-
-    # Check for overfitting
-    if monitor.is_overfitting(strict=True):
-        report = monitor.get_overfitting_report()
-        print(report)  # Detailed report with recommendations
-
-        # Get actionable suggestions
-        if report.status == OverfittingStatus.SEVERE_OVERFITTING:
-            print(" Severe overfitting detected!")
-            for rec in report.recommendations:
-                print(f"  • {rec}")
-
-    # Early stopping
-    if monitor.should_stop_early(patience=10, min_delta=0.1):
-        print(f"Early stopping at epoch {epoch}")
-        break
-
-# Get best model epoch
-best_epoch, best_acc = monitor.get_best_epoch('val_acc')
-print(f"Best model: epoch {best_epoch} with {best_acc:.2f}% accuracy")
-
-# Training summary
-print(monitor.get_summary())
+monitor = TrainingMonitor(window_size=5, overfitting_threshold=5.0)
+# monitor.update(epoch, train_metrics, val_metrics)
+# monitor.is_overfitting(), monitor.should_stop_early(patience=10)
 ```
 
-**Key Features:**
-
-- **Automatic Overfitting Detection:** Monitors generalization gap (train vs val accuracy)
-- **Severity Classification:** NO_OVERFITTING, MILD, MODERATE, SEVERE, UNDERFITTING
-- **Actionable Recommendations:** Specific suggestions based on training state
-- **Trend Analysis:** Track if metrics are improving, degrading, or stable
-- **Early Stopping:** Automatic detection with configurable patience
-- **Best Model Tracking:** Find optimal checkpoint for deployment
-- **Comprehensive Reports:** Detailed analysis with confidence scores
-
-**Example Output:**
-
-```
-============================================================
-Overfitting Analysis Report
-============================================================
-Status: Moderate Overfitting
-Confidence: 85.0%
-
-Metrics:
-  Train Accuracy: 92.50%
-  Val Accuracy:   85.00%
-  Generalization Gap: +7.50%
-
-Recommendations:
-  • Increase regularization (weight decay: 1e-4 to 5e-4)
-  • Add/increase dropout (0.2-0.3)
-  • Apply data augmentation
-  • Monitor validation metrics more closely
-============================================================
-```
-
-See [examples/training_monitor_demo.py](examples/training_monitor_demo.py) for 7 comprehensive examples and best practices.
-
-### Production-Safe Validation
-
-All input validation uses proper exceptions (ValueError) instead of assert statements, ensuring that validation logic cannot be bypassed when Python is run with optimization flags (`-O` or `-OO`):
-
-```python
-from pydml import DMLTrainer
-from pydml.models.cifar import resnet32
-
-# Validation always works, even with python -O
-models = [resnet32() for _ in range(3)]
-optimizers = [torch.optim.SGD(models[0].parameters(), lr=0.1)]  # Wrong count!
-
-try:
-    trainer = DMLTrainer(models, optimizers=optimizers)
-except ValueError as e:
-    print(f"Error: {e}")
-    # Output: Number of optimizers (1) must match number of models (3)
-```
-
-**Protected validations:**
-
-- Optimizer count must match model count
-- MobileNet stride must be 1 or 2
-- WideResNet depth must satisfy `(depth - 4) % 6 == 0`
-
-**Why this matters:**
-
-- Assert statements are removed when running `python -O` or `python -OO`
-- This can lead to silent failures in production
-- Using ValueError ensures validation always works
-
-See [examples/validation_demo.py](examples/validation_demo.py) for interactive demonstration.
-
-### Comprehensive Input Validation
-
-PyDML includes extensive input validation to catch errors early and provide clear, actionable error messages:
-
-```python
-from pydml import DMLConfig
-from pydml.utils import get_cifar10_loaders
-
-# Example 1: Invalid batch size
-try:
-    train_loader, val_loader, test_loader = get_cifar10_loaders(
-        batch_size=-32  # Invalid: negative
-    )
-except ValueError as e:
-    print(e)
-    # Output: batch_size must be a positive integer, got -32
-
-# Example 2: Invalid validation split
-try:
-    train_loader, val_loader, test_loader = get_cifar10_loaders(
-        val_split=1.5  # Invalid: > 1.0
-    )
-except ValueError as e:
-    print(e)
-    # Output: val_split must be in range [0.0, 1.0], got 1.5
-
-# Example 3: Invalid DML configuration
-try:
-    config = DMLConfig(
-        temperature=-1.0,  # Invalid: negative
-        peer_selection='invalid'  # Invalid: not in choices
-    )
-except ValueError as e:
-    print(e)
-    # Output: temperature must be a positive number, got -1.0
-```
-
-**Validated parameters:**
-
-- **Data Loading:** batch_size, num_workers, val_split, data_dir
-- **Training:** epochs, learning_rate, temperature, weights
-- **Models:** model count (≥2), model types, optimizer count
-- **Configuration:** peer_selection, device specification
-- **Tensors:** shape validation, dimension checking
-
-**Benefits:**
-
-- Catch errors at configuration time, not runtime
-- Clear error messages with actual vs. expected values
-- Easier debugging with specific parameter names
-- Fail fast with actionable feedback
-- Type and value validation for all inputs
-
-See [examples/input_validation_demo.py](examples/input_validation_demo.py) for 7 comprehensive examples.
+See [examples/](examples/) for 17 complete demo scripts covering all features.
 
 ## Testing
 
-Run the test suite:
-
 ```bash
-# Install pytest
-pip install pytest
-
-# Run tests
 pytest tests/ -v
-
-# Quick verification
-python examples/test_installation.py
 ```
-
-**Current Status:** 22/22 tests passing | Validation: 100% ready for publication
-
-## Benchmarks
-
-Run the CIFAR-100 benchmark:
-
-```bash
-python examples/cifar100_benchmark.py
-```
-
-Expected results (200 epochs):
-
-- Independent training: ~65% accuracy
-- DML (2 networks): ~67-68% accuracy
-- DML (3+ networks): ~68-69% accuracy
-
-## Documentation
-
-- [GETTING_STARTED.md](GETTING_STARTED.md) - Quick installation and first steps
-- [examples/](examples/) - 16 working examples
-
-## Project Status
-
-**Current Release:** v0.1.0 - Production Ready
-
-### Completed Features
-
-- Core DML implementation
-- Knowledge Distillation
-- Co-Distillation Trainer
-- Feature-Based DML
-- Attention Transfer
-- Curriculum Learning
-- Visualization tools
-- Robustness analysis
-- 22/22 tests passing
-- Validated: +18% accuracy improvement
 
 ## Contributing
 
-Contributions are welcome! This project is actively maintained.
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
-`Note: The project is still in early period and I am still learning and exploring.`
-
-### Future Enhancements
-
-- [ ] Multi-GPU distributed training (DDP)
-- [ ] Mixed precision training (FP16)
-- [ ] Additional model architectures
-- [ ] PyPI package publication
-- [ ] Jupyter notebook tutorials
+Open research directions and contribution ideas are documented in [FUTURE_WORK.md](FUTURE_WORK.md).
 
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-<!-- ##  Citation
-
-If you use DML-PY in your research, please cite:
-
-```bibtex
-@inproceedings{zhang2018deep,
-  title={Deep mutual learning},
-  author={Zhang, Ying and Xiang, Tao and Hospedales, Timothy M and Lu, Huchuan},
-  booktitle={CVPR},
-  pages={4320--4328},
-  year={2018}
-}
-
-@software{dml-py2025,
-  title={DML-PY: A Collaborative Deep Learning Library},
-  author={DML-PY Contributors},
-  year={2025},
-  url={https://github.com/VARUN3WARE/dml-py}
-}
-``` -->
-
-## Acknowledgments
+## Reference
 
 This library implements the method from:
 
-**"Deep Mutual Learning"**  
-Ying Zhang, Tao Xiang, Timothy M. Hospedales, Huchuan Lu  
-CVPR 2018  
-https://arxiv.org/abs/1706.00384
-
-## Project Stats
-
-- **Lines of Code:** ~7,340
-- **Files:** 44 (28 in dml-py/ + 16 examples)
-- **Tests:** 22 (all passing )
-- **Examples:** 16 working demos
-- **Models:** 4 architectures (ResNet, MobileNet, WRN)
-- **Trainers:** 5 (DML, Distillation, Co-Distillation, Feature-DML, +Base)
-- **Validation:** 100% ready for publication
-
----
-
-**Status:** Production Ready | Validated: +18% Performance Boost
-
-_Last Updated: December 28, 2025_
+**"Deep Mutual Learning"** - Ying Zhang, Tao Xiang, Timothy M. Hospedales, Huchuan Lu. CVPR 2018. [arXiv:1706.00384](https://arxiv.org/abs/1706.00384)
