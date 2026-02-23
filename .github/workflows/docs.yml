@@ -1,10 +1,13 @@
 name: Documentation
 
+# Temporarily disabled - will re-enable later
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build-docs:
